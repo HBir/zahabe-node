@@ -8,41 +8,53 @@
 </div>
 
 <div id="wrapper">
-    <h1><a href="/">Minns vi den gången Zahabe...</a></h1>
-    <div id="errorspace"><!--Error messages appear here-->
-    
+  <h1><a href="/">Minns vi den gången Zahabe...</a></h1>
+  <div id="errorspace"><!--Error messages appear here-->
+  
+  </div>
+  <div class="lank edit">
+    <a href="#" title="Attatchments"><img src="../images/read.png" alt="Attatchments"></a>
+      
+  </div>
+  <div class="lank edit rightmenu">
+    <a href="#" title="Edit" id="editActive"><img src="../images/edit.png" alt="edit"></a>
+  </div>
+  <form id="MVform" action="#" method="post" accept-charset="utf-8" autocomplete="off">
+    <div id="formbox">
+      <input type="text" name="Text" id="nyruta" placeholder="Ny" required>
+      <button type="submit" id="nybutton">Lägg till</button>
     </div>
-    <div class="lank edit">
-        <a href="allstories.php" title="Attatchments"><img src="../images/read.png" alt="Attatchments"></a>
+  </form>
+  
+  <div id="dagens">
+    <b>Dagens Zahabe:</b>
+    <ol>
         
-    </div>
-    <div class="lank edit rightmenu">
-        <a href="remove.php" title="Edit" id="editActive"><img src="../images/edit.png" alt="edit"></a>
-    </div>
-    <form id="MVform" action="add.php" method="post" accept-charset="utf-8" autocomplete="off">
-        <div id="formbox">
-            <input type="text" name="Text" id="nyruta" placeholder="Ny" required>
-            <button type="submit" id="nybutton">Lägg till</button>
-        </div>
-    </form>
-    
-    <div id="dagens">
-        <b>Dagens Zahabe:</b>
-        <ol>
-        
-        </ol>
-    </div>
-    <div id="rows">
-        <ol reversed id="MVs">
-            {{#each MVs}}
-                <li>{{this.Text}}</li>
-            {{/each}}
-           
-        </ol>
+      {{#if daily.Story}}
+        <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
+        <a href='#'><li value='{{daily.cnt}}'><span>{{daily.Text}}</span></li></a>
+      {{else}}
+        <li value="{{daily.cnt}}">{{daily.Text}}</li>
+      {{/if}}
+      
+    </ol>
+  </div>
+  <div id="rows">
+    <ol reversed id="MVs">
+      {{#each MVs}}
+        {{#if this.Story}}
+          <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
+          <a href='#'><li  class='MV'><span>{{this.Text}}</span></li></a>
+        {{else}}
+          <li class='MV'>{{this.Text}}</li>
+        {{/if}}
+      {{/each}}
+       
+    </ol>
 
-    </div>
-    <form id="admin">
-        <input id="adminpassword" type="password" name="password" required>
-        <input id="adminsubmit"type ="submit" formaction="ajaxEditUI.php" class="button" value=">">
-    </form>
+  </div>
+  <form id="admin">
+    <input id="adminpassword" type="password" name="password" required>
+    <input id="adminsubmit"type ="submit" formaction="#" class="button" value=">">
+  </form>
 </div>
