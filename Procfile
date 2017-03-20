@@ -1,1 +1,1 @@
-web: babel-node bin/www --presets es2015,stage-2
+web: ./node_modules/.bin/babel-node bin/www --presets es2015,stage-2
