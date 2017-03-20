@@ -44,9 +44,9 @@
       {{#each MVs}}
         {{#if this.Story}}
           <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
-          <a href='#'><li  class='MV'><span>{{this.Text}}</span></li></a>
+          <a href='#'><li value="{{this.cnt}}" class='MV'><span>{{this.Text}}</span></li></a>
         {{else}}
-          <li class='MV'>{{this.Text}}</li>
+          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}">{{this.Text}}</li>
         {{/if}}
       {{/each}}
        
