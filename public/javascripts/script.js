@@ -26,7 +26,43 @@ $(document).on("keypress", "#cli_input", function(e) {
 
 function cliInput(input) {
     console.log("'" + input.substring(0, 27) + "'");
-    if ((/h ?.*/).test(input) || (/help ?.*/).test(input) || (/man ?.*/).test(input)) {
+    if ((cliMatch(input, "Minns vi den gången Zahabe ") || cliMatch(input, "mvdgz ")) && input.indexOf('?') > 0) {
+        /* mvdgz - Add new MV */
+        input = input.substring(0, input.lastIndexOf('?') + 1);
+        if (input.substring(0, 6) == "mvdgz ") {
+            input = input.replace("mvdgz ", "Minns vi den gången Zahabe ");
+        }
+        $.ajax({
+                method: "POST",
+                url: "/api/mvs",
+                data: { mv: input }
+            })
+            .done(function(msg) {
+                cliClear();
+                if (msg.status == "error") {
+                    cliOut("Something went wrong");
+                }
+                cliOut("Successfully added MV:\n" + input);
+                refreshMvs();
+                console.log("input Saved: " + msg);
+            });
+    } else if (cliMatch(input, "edit")) {
+        cliOut('#Redigera MV\nedit [number] [new text]\n-Not yet implemented-');
+    } else if (cliMatch(input, "delete")) {
+        cliOut('#Ta bort MV\ndelete [number]\n-Not yet implemented-');
+    } else if (cliMatch(input, "move")) {
+        cliOut('#Flytta MV\nmove [old number] [new number]\n-Not yet implemented-');
+    } else if (cliMatch(input, "story")) {
+        cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Not yet implemented-');
+    } else if (cliMatch(input, "search")) {
+        cliOut('#Hitta alla MVs som innehåller term\nsearch [term]\n-Not yet implemented-');
+    } else if (cliMatch(input, "random")) {
+        cliOut('#Visa en slumpad MV\nrandom\n-Not yet implemented-');
+    } else if (cliMatch(input, "mine")) {
+        cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine\n-Not yet implemented-');
+    } else if (cliMatch(input, "stats")) {
+        cliOut('#Visa statistik\nstats\n-Not yet implemented-');
+    } else if (cliMatch(input, "h") || cliMatch(input, "help") || cliMatch(input, "man")) {
         /* help - Log out help commands */
         cliClear();
         let output = `help, h  #Visa alla kommando
@@ -47,44 +83,6 @@ stats  #Visa statistik`;
 
         cliOut(output);
 
-    } else if ((input.substring(0, 27) == "Minns vi den gången Zahabe " || input.substring(0, 6) == "mvdgz ") && input.indexOf('?') > 0) {
-        /* mvdgz - Add new MV */
-        input = input.substring(0, input.lastIndexOf('?') + 1);
-        if (input.substring(0, 6) == "mvdgz ") {
-            input = input.replace("mvdgz ", "Minns vi den gången Zahabe ");
-        }
-        console.log(input);
-        $.ajax({
-                method: "POST",
-                url: "/api/mvs",
-                data: { mv: input }
-            })
-            .done(function(msg) {
-                cliClear();
-                if (msg.status == "error") {
-                    cliOut("Something went wrong");
-                }
-                cliOut("Successfully added MV:\n" + input);
-                refreshMvs();
-                console.log("input Saved: " + msg);
-            });
-        console.log(input);
-    } else if ((/edit ?.*/).test(input)) {
-        cliOut('#Redigera MV\nedit [number] [new text]\n-Not yet implemented-');
-    } else if ((/delete ?.*/).test(input)) {
-        cliOut('#Ta bort MV\ndelete [number]\n-Not yet implemented-');
-    } else if ((/move ?.*/).test(input)) {
-        cliOut('#Flytta MV\nmove [old number] [new number]\n-Not yet implemented-');
-    } else if ((/story ?.*/).test(input)) {
-        cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Not yet implemented-');
-    } else if ((/search ?.*/).test(input)) {
-        cliOut('#Hitta alla MVs som innehåller term\nsearch [term]\n-Not yet implemented-');
-    } else if ((/random ?.*/).test(input)) {
-        cliOut('#Visa en slumpad MV\nrandom\n-Not yet implemented-');
-    } else if ((/mine ?.*/).test(input)) {
-        cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine\n-Not yet implemented-');
-    } else if ((/stats ?.*/).test(input)) {
-        cliOut('#Visa statistik\nstats\n-Not yet implemented-');
     } else if (input.length > 0) {
         /* Error input */
         cliOut(`...inte förstod.`);
@@ -93,6 +91,10 @@ stats  #Visa statistik`;
         $('#cli_output').hide();
     }
 };
+
+function cliMatch(string, match) {
+    return string.substring(0, match.length) == match;
+}
 
 function cliClear(callback) {
     let textbox = $('#cli_input');
