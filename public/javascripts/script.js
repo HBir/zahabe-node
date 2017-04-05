@@ -70,21 +70,21 @@ stats  #Visa statistik`;
             });
         console.log(input);
     } else if ((/edit ?.*/).test(input)) {
-        cliOut('#Redigera MV\nedit [number] [new text]');
+        cliOut('#Redigera MV\nedit [number] [new text]\n-Not yet implemented-');
     } else if ((/delete ?.*/).test(input)) {
-        cliOut('#Ta bort MV\ndelete [number]');
+        cliOut('#Ta bort MV\ndelete [number]\n-Not yet implemented-');
     } else if ((/move ?.*/).test(input)) {
-        cliOut('#Flytta MV\nmove [old number] [new number]');
+        cliOut('#Flytta MV\nmove [old number] [new number]\n-Not yet implemented-');
     } else if ((/story ?.*/).test(input)) {
-        cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story');
+        cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Not yet implemented-');
     } else if ((/search ?.*/).test(input)) {
-        cliOut('#Hitta alla MVs som innehåller term\nsearch [term]');
+        cliOut('#Hitta alla MVs som innehåller term\nsearch [term]\n-Not yet implemented-');
     } else if ((/random ?.*/).test(input)) {
-        cliOut('#Visa en slumpad MV\nrandom');
+        cliOut('#Visa en slumpad MV\nrandom\n-Not yet implemented-');
     } else if ((/mine ?.*/).test(input)) {
-        cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine');
+        cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine\n-Not yet implemented-');
     } else if ((/stats ?.*/).test(input)) {
-        cliOut('#Visa statistik\nstats');
+        cliOut('#Visa statistik\nstats\n-Not yet implemented-');
     } else if (input.length > 0) {
         /* Error input */
         cliOut(`...inte förstod.`);
