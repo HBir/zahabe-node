@@ -6,6 +6,23 @@
     font-style: normal;
 }
 
+elements {
+    /* gruvbox colors: */
+    --bg0_h: #1d2021;
+    --bg0: #282828;
+    --bg1: #3C3836;
+    --bg2: #504945;
+    --orange: #d65d0e, #fe8019;
+    --fg: #ebdbb2;
+    --fg0: #fbf1c7;
+    --fg1: #ebdbb2;
+    --fg2: #d5c4a1;
+    --fg3: #bdae93;
+    --fg4: #a89984;
+    --red: #cc241d, #cc241d;
+    --gray: #928374;
+}
+
 ol,
 ul {
     list-style: decimal;
@@ -14,12 +31,16 @@ ul {
 body {
     background-color: #0a0a0a;
     font: 20px "FantasqueSansMono", "courier";
-    color: #ebdbb2;
+    color: #fbf1c7;
     width: 100%;
     font-size: 20px;
     margin-top: 0px;
     margin-bottom: 0px;
     margin: 0px;
+}
+
+.mvContent {
+    color: #fbf1c7;
 }
 
 h1 {
@@ -48,10 +69,6 @@ li {
     word-wrap: break-word;
     counter-increment: item;
     color: #a89984;
-}
-
-.mvContent {
-    color: #ebdbb2;
 }
 
 .button {
@@ -88,14 +105,16 @@ textarea:focus {
     width: 4.7%;
     background-color: #1b1b1b;
     border: none;
-    /*padding: 7px 0 7px 0;*/
-    color: white;
+    padding: 0;
+    color: #fbf1c7;
     text-align: center;
     text-decoration: none;
     display: block;
     float: left;
     font: 30px "FantasqueSansMono", "courier";
     height: 32px;
+    line-height: 32px;
+    max-height: 150px;
     cursor: pointer;
 }
 

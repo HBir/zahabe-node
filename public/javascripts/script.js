@@ -4,11 +4,11 @@ var oldList = 0;
 var newList = 0;
 var timer = null;
 
-console.log("script loaded")
+console.log("script loaded");
 
 function refreshPage(type) {
     /*Kollar om några nya inlägg har lagts till och uppdaterar sidan asynkront ifall så är fallet*/
-    $.get("ajaxMV.php", function (data) {
+    $.get("ajaxMV.php", function(data) {
         var newList = (data.match(/<li/g) || []).length;
         setCookie("MVAmount", newList, 50);
         if (newList != oldList) {
@@ -37,18 +37,18 @@ function isBlank(str) {
 }
 
 function refreshEditPage() {
-    
+
     clearInterval(timer);
 
     timer = null;
-     $(".MVEdit").parent().hide().slideDown();
-     $.get("ajaxEditUI.php", function (data) {
+    $(".MVEdit").parent().hide().slideDown();
+    $.get("ajaxEditUI.php", function(data) {
 
-         $("#MVs").html(data);
-         editButtonFunctionality(data);
+        $("#MVs").html(data);
+        editButtonFunctionality(data);
 
-     });
-    
+    });
+
 }
 
 function editButtonFunctionality(data) {
@@ -114,13 +114,13 @@ function editButtonFunctionality(data) {
 }
 
 function removeMV(id) {
-    var r = confirm("Säker på att du vill ta bort "+id+"?");
+    var r = confirm("Säker på att du vill ta bort " + id + "?");
     if (r == true) {
         $.ajax({
             url: "ajaxRemove.php",
             type: "POST",
             data: { id: id },
-            success: function (data) {
+            success: function(data) {
                 console.log("Removed:" + data);
                 refreshEditPage();
             }
@@ -140,20 +140,26 @@ function showMessage(message) {
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
 }
 
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
+    for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
+        while (c.charAt(0) == ' ') c = c.substring(1);
         if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
     }
     return "";
+}
+
+function auto_grow(element) {
+    element.style.height = "30px";
+    element.style.height = (element.scrollHeight) + "px";
+    $('#nybutton').css('height', element.scrollHeight);
 }
 
 // $(window).focus(function() {
