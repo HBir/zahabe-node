@@ -24,41 +24,68 @@ $(document).on("keypress", "#cli_input", function(e) {
     }
 });
 
-function cliInput(data) {
-    console.log("'" + data.substring(0, 27) + "'");
-    if (data == "-h" || (/-help.*/).test(data)) {
-        /* Log out help commands */
+function cliInput(input) {
+    console.log("'" + input.substring(0, 27) + "'");
+    if ((/h ?.*/).test(input) || (/help ?.*/).test(input) || (/man ?.*/).test(input)) {
+        /* help - Log out help commands */
         cliClear();
-        cliOut(`-help -h  #Visa alla kommando
-Minns vi den gången Zahabe [text]? mvdgz [text]?  #Ny MV
--edit [number] [new text]  #Redigera MV
--delete [number]  #Ta bort MV
--story show  #Visa alla MVs med story
--story new  #Skapa en ny story
--story edit [number]  #Redigera story
--move [old number] [new number]  #Flytta MV
--stats  #Visa statistik
--search [term]  #Hitta alla MVs som innehåller term`);
-
-    } else if ((data.substring(0, 27) == "Minns vi den gången Zahabe " || data.substring(0, 6) == "mvdgz ") && data.indexOf('?') > 0) {
-        /* Add new MV */
-        data = data.substring(0, data.lastIndexOf('?') + 1);
-        if (data.substring(0, 6) == "mvdgz ") {
-            data = data.replace("mvdgz ", "Minns vi den gången Zahabe ");
+        let output = `help, h  #Visa alla kommando
+Minns vi den gången Zahabe [text]?, mvdgz [text]?  #Ny MV
+edit [number] [new text]  #Redigera MV
+delete [number]  #Ta bort MV
+move [old number] [new number]  #Flytta MV
+story new  #Skapa en ny story
+story edit [number]  #Redigera story
+story show  #Visa alla MVs med story
+search [term]  #Hitta alla MVs som innehåller term
+random  #Visa en slumpad MV
+mine  #Hitta alla MVs skrivna vid samma IP address som din nuvarande IP
+stats  #Visa statistik`;
+        if (input.indexOf('admin') > 0) {
+            output += `\n[command] --admin [password]  #Lägg till admin privilegie`;
         }
 
+        cliOut(output);
+
+    } else if ((input.substring(0, 27) == "Minns vi den gången Zahabe " || input.substring(0, 6) == "mvdgz ") && input.indexOf('?') > 0) {
+        /* mvdgz - Add new MV */
+        input = input.substring(0, input.lastIndexOf('?') + 1);
+        if (input.substring(0, 6) == "mvdgz ") {
+            input = input.replace("mvdgz ", "Minns vi den gången Zahabe ");
+        }
+        console.log(input);
         $.ajax({
                 method: "POST",
                 url: "/api/mvs",
-                data: { mv: data }
+                data: { mv: input }
             })
             .done(function(msg) {
                 cliClear();
-                cliOut("Successfully added MV:\n" + data);
-                console.log("Data Saved: " + msg);
+                if (msg.status == "error") {
+                    cliOut("Something went wrong");
+                }
+                cliOut("Successfully added MV:\n" + input);
+                refreshMvs();
+                console.log("input Saved: " + msg);
             });
-        console.log(data);
-    } else if (data.length > 0) {
+        console.log(input);
+    } else if ((/edit ?.*/).test(input)) {
+        cliOut('#Redigera MV\nedit [number] [new text]');
+    } else if ((/delete ?.*/).test(input)) {
+        cliOut('#Ta bort MV\ndelete [number]');
+    } else if ((/move ?.*/).test(input)) {
+        cliOut('#Flytta MV\nmove [old number] [new number]');
+    } else if ((/story ?.*/).test(input)) {
+        cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story');
+    } else if ((/search ?.*/).test(input)) {
+        cliOut('#Hitta alla MVs som innehåller term\nsearch [term]');
+    } else if ((/random ?.*/).test(input)) {
+        cliOut('#Visa en slumpad MV\nrandom');
+    } else if ((/mine ?.*/).test(input)) {
+        cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine');
+    } else if ((/stats ?.*/).test(input)) {
+        cliOut('#Visa statistik\nstats');
+    } else if (input.length > 0) {
         /* Error input */
         cliOut(`...inte förstod.`);
     } else {
@@ -103,6 +130,25 @@ function cliOut(text, callback) {
         }
     })();
 
+}
+
+function refreshMvs(force) {
+    $.ajax({
+            method: "GET",
+            url: "/api/mvs"
+        })
+        .done(function(res) {
+            /*       
+      {{#each MVs}}
+        {{#if this.Story}}
+          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">XX</span> {{this.Text}} <span class="baffle-forever">XX</span></span></li></a>
+        {{else}}
+          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
+        {{/if}}
+      {{/each}} */
+
+            console.log(res);
+        });
 }
 
 function auto_grow(element) {

@@ -29,7 +29,22 @@ app.get('/api/mvs', function(req, res, next) {
 
 app.post('/api/mvs', function(req, res, next) {
     console.log(req.body.mv);
-    res.send('yes!');
+    console.log(req.connection.remoteAddres);
+    console.log(req.ip);
+    try {
+        Promise.all([
+            db.run(`INSERT INTO MinnsDu (Text, SkrivenAv)
+                    VALUES ($mv, $ip)`, { $mv: req.body.mv, $ip: req.ip }),
+            db.run(`UPDATE MinnsDu
+                    SET MVOrder = last_insert_rowid()
+                    WHERE ID = last_insert_rowid()`),
+
+        ]).then(function(result) {
+            res.send({ status: "success" });
+        });
+    } catch (err) {
+        res.send({ status: "error" })
+    }
 });
 
 module.exports = app;
@@ -42,7 +57,7 @@ Promise.resolve()
 function getAllMVs(callback) {
     Promise.all([
         db.all(`SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
-            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID ORDER BY MVOrder desc`, { Promise })
+            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID ORDER BY MVOrder desc`)
     ]).then(function([mvs]) {
         callback(mvs);
     });

@@ -27,8 +27,7 @@
     <ol id="MVs">
       {{#each MVs}}
         {{#if this.Story}}
-          <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
-          <a href='#'><li value="{{this.cnt}}" class='MV'><span class="mvContent">{{this.Text}}</span></li></a>
+          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">XX</span> {{this.Text}} <span class="baffle-forever">XX</span></span></li></a>
         {{else}}
           <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
         {{/if}}
