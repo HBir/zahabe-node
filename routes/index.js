@@ -36,7 +36,16 @@ Promise.resolve()
 
 function getAllMVs(callback) {
     Promise.all([
-        db.all(`SELECT Text, ID, Story, SkrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+        db.all(`SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID ORDER BY MVOrder desc`, { Promise })
+    ]).then(function([mvs]) {
+        callback(mvs);
+    });
+}
+
+function getAllMVs(callback) {
+    Promise.all([
+        db.all(`SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
             FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID ORDER BY MVOrder desc`, { Promise })
     ]).then(function([mvs]) {
         callback(mvs);
@@ -50,7 +59,7 @@ function getDate() {
     month = (month < 10 ? "0" : "") + month;
     var day = date.getDate();
     day = (day < 10 ? "0" : "") + day;
-    return year + month + day
+    return year + month + day;
 }
 
 function RNG(seed) {

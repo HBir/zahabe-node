@@ -5,6 +5,90 @@ var newList = 0;
 var timer = null;
 
 console.log("script loaded");
+$(document).ready(function() {
+    $('#cli_input').focus();
+});
+
+$(document).on("click", "#cli_output", function() {
+    $('#cli_input').focus();
+});
+
+$(document).on("click", "#cli_button", function() {
+    cliInput($('#cli_input').val());
+});
+
+$(document).on("keypress", "#cli_input", function(e) {
+    if (e.keyCode == 13 && !e.shiftKey) {
+        e.preventDefault();
+        cliInput($(this).val());
+    }
+});
+
+function cliInput(data) {
+    console.log("'" + data.substring(0, 27) + "'");
+    if (data == "-h" || (/-help.*/).test(data)) {
+        /* Log out help commands */
+        cliIn($('#cli_input'));
+        cliOut(`-help  #shows all commands
+-sad   #sd`)
+
+    } else if ((data.substring(0, 27) == "Minns vi den gången Zahabe " || data.substring(0, 6) == "mvdgz ") && data.indexOf('?') > 0) {
+        /* Add new MV */
+        cliOut(data);
+        console.log(data);
+    } else if (data.length > 0) {
+        /* Error input */
+        cliOut(`...inte förstod.`);
+    } else {
+        /* If empty input */
+        $('#cli_output').hide();
+    }
+};
+
+function cliIn(element, callback) {
+    let textbox = $(element);
+    console.log(textbox.val());
+    textbox.val("");
+    // let i = 0;
+    // (function removeLetter() {
+    //     if (textbox.val() !== "") {
+    //         textbox.val(textbox.val().substring(1, textbox.val().length));
+    //         i++;
+    //         setTimeout(removeLetter, 1);
+    //     } else {
+    //         console.log("complete");
+    //         if (callback) {
+    //             callback();
+    //         }
+    //     }
+    // })();
+}
+
+function cliOut(text, callback) {
+    $('#cli_output').show();
+    $('#cli_output').html("");
+
+    let i = 0;
+    (function printLetter() {
+        if (i < text.length) {
+            $('#cli_output').append(text[i]);
+            i++;
+            setTimeout(printLetter, 1);
+        } else {
+            if (callback) {
+                callback();
+            }
+        }
+    })();
+
+}
+
+function auto_grow(element) {
+    element.style.height = "30px";
+    element.style.height = (element.scrollHeight) + "px";
+    $('#cli_button').css('height', element.scrollHeight);
+    $('#bash').css('height', element.scrollHeight);
+}
 
 function refreshPage(type) {
     /*Kollar om några nya inlägg har lagts till och uppdaterar sidan asynkront ifall så är fallet*/
@@ -156,11 +240,7 @@ function getCookie(cname) {
     return "";
 }
 
-function auto_grow(element) {
-    element.style.height = "30px";
-    element.style.height = (element.scrollHeight) + "px";
-    $('#nybutton').css('height', element.scrollHeight);
-}
+
 
 // $(window).focus(function() {
 //     /*Tar bort uppdateringsmeddelanden när sidan får fokus*/
@@ -183,7 +263,7 @@ function auto_grow(element) {
 //             url: url,
 //             data: $("#MVform").serialize(),
 //             success: function(data) {
-//                 document.getElementById("nyruta").value = '';
+//                 document.getElementById("cli_input").value = '';
 //                 $('#errorspace').html("");
 //                 refreshPage("add");
 //             },

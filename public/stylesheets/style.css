@@ -45,6 +45,7 @@ body {
 
 h1 {
     font-size: 30px;
+    padding-left: 20px
 }
 
 #wrapper {
@@ -77,40 +78,53 @@ li {
     font-size: 20px;
 }
 
-#nyruta {
-    width: 95%;
-    background-color: #1b1b1b;
-    border: none;
-    color: white;
-    text-decoration: none;
-    display: block;
-    font: 30px "FantasqueSansMono", "courier";
-    float: left;
-    resize: none;
-    padding: 0px;
-    margin-left: 0.1%;
-    resize: none;
-    overflow: hidden;
-    min-height: 30px;
-    max-height: 150px;
-}
-
 input[type="text"]:focus,
 textarea:focus {
     border: none !important;
     outline: 0 none;
 }
 
-#nybutton {
-    width: 4.7%;
-    background-color: #1b1b1b;
+#cli_input {
+    display: block;
     border: none;
     padding: 0;
+    margin: 0;
+    width: calc(100% - 100px);
+    background-color: #1b1b1b;
+    color: #d5c4a1;
+    text-decoration: none;
+    font: 30px "FantasqueSansMono", "courier";
+    float: left;
+    resize: none;
+    overflow: hidden;
+    min-height: 30px;
+    max-height: 150px;
+}
+
+#bash {
+    display: block;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: #1b1b1b;
+    width: 20px;
+    float: left;
+    color: #fbf1c7;
+    font: 30px "FantasqueSansMono", "courier";
+    /*margin-left: 0.1%;*/
+}
+
+#cli_button {
+    display: block;
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 80px;
+    background-color: #1b1b1b;
     color: #fbf1c7;
     text-align: center;
     text-decoration: none;
     display: block;
-    float: left;
     font: 30px "FantasqueSansMono", "courier";
     height: 31px;
     line-height: 32px;
@@ -118,28 +132,35 @@ textarea:focus {
     cursor: pointer;
 }
 
-
-/*#cmd {
-    font-family: courier;
-    font-size: 14px;
-    background: black;
-    color: #21f838;
-    padding: 5px;
-    overflow: hidden;
+#cli_output {
+    display: none;
+    background-color: #1b1b1b;
+    width: 100%;
+    padding: 10px 20px 10px 20px;
+    font-size: 25px;
+    white-space: pre-wrap;
+    clear: both;
 }
 
-#cmd span {
-    float: left;
-    padding-left: 3px;
-    white-space: pre;
+::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
+    color: #fbf1c7;
 }
 
-#cursor {
-    float: left;
-    width: 5px;
-    height: 14px;
-    background: #21f838;
-}*/
+::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #fbf1c7;
+}
+
+:-ms-input-placeholder {
+    /* IE 10+ */
+    color: #fbf1c7;
+}
+
+:-moz-placeholder {
+    /* Firefox 18- */
+    color: #fbf1c7;
+}
 
 #editruta {
     width: 817px;
@@ -165,7 +186,7 @@ textarea:focus {
 }
 
 #rows {
-    width: 95%;
+    width: calc(100% - 65px);
     display: inline-block;
     margin-left: 65px;
 }
@@ -282,30 +303,19 @@ a li span:hover {
 
 /********************************************************************/
 
-
-/*@media screen and (max-width:1000px) {
-    body {
-        width: 98%;
-        margin-left: 0px;
+@media screen and (max-width:600px) {
+    #cli_input {
+        width: calc(100% - 20px)
     }
-    #wrapper {
-        width: 98%;
-        margin-left: 2%;
+    #cli_button {
+        clear: both;
+        width: 100%
     }
     #rows {
-        max-width: 100%;
+        width: calc(100% - 57px);
+        margin-left: 57px;
     }
-    .lank {
-        top: 140px;
-    }
-    #dagens {
-        max-width: 90%;
-    }
-    h1 {
-        font-size: 1.5em;
-        color: blue;
-    }
-}*/
+}
 
 
 /************************************************************************/
@@ -433,4 +443,150 @@ hr {
     width: 150px;
     font: 20px "Open Sans", "sans-serif";
     float: left;
+}
+
+.glitch {
+    -webkit-animation: glitch1 2.5s infinite;
+    animation: glitch1 2.5s infinite;
+}
+
+span.glitch {
+    -webkit-animation: glitch1 1.5s infinite;
+    animation: glitch1 1.5s infinite;
+}
+
+@-webkit-keyframes glitch1 {
+    0% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    7% {
+        -webkit-transform: skew(-0.5deg, -0.9deg);
+        transform: skew(-0.5deg, -0.9deg);
+        opacity: 0.75;
+    }
+    10% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    27% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    30% {
+        -webkit-transform: skew(0.8deg, -0.1deg);
+        transform: skew(0.8deg, -0.1deg);
+        opacity: 0.75;
+    }
+    35% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    52% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    55% {
+        -webkit-transform: skew(-1deg, 0.2deg);
+        transform: skew(-1deg, 0.2deg);
+        opacity: 0.75;
+    }
+    50% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    72% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    75% {
+        -webkit-transform: skew(0.4deg, 1deg);
+        transform: skew(0.4deg, 1deg);
+        opacity: 0.75;
+    }
+    80% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@keyframes glitch1 {
+    0% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    7% {
+        -webkit-transform: skew(-0.5deg, -0.9deg);
+        transform: skew(-0.5deg, -0.9deg);
+        opacity: 0.75;
+    }
+    10% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    27% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    30% {
+        -webkit-transform: skew(0.8deg, -0.1deg);
+        transform: skew(0.8deg, -0.1deg);
+        opacity: 0.75;
+    }
+    35% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    52% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    55% {
+        -webkit-transform: skew(-1deg, 0.2deg);
+        transform: skew(-1deg, 0.2deg);
+        opacity: 0.75;
+    }
+    50% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    72% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    75% {
+        -webkit-transform: skew(0.4deg, 1deg);
+        transform: skew(0.4deg, 1deg);
+        opacity: 0.75;
+    }
+    80% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: none;
+        transform: none;
+        opacity: 1;
+    }
 }

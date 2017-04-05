@@ -1,26 +1,16 @@
 
 <div id="wrapper">
-  <h1><a href="/">Minns vi den gången Zahabe...</a></h1>
-  <div id="errorspace"><!--Error messages appear here-->
-  
-  </div>
-  {{!--<div class="lank edit">
-    <a href="#" title="Attatchments"><img src="../images/read.png" alt="Attatchments"></a>
-      
-  </div>
-  <div class="lank edit rightmenu">
-    <a href="#" title="Edit" id="editActive"><img src="../images/edit.png" alt="edit"></a>
-  </div>--}}
-  <form id="MVform" action="#" method="post" accept-charset="utf-8" autocomplete="off">
-    <div id="formbox">
-      {{!--<input type="text" name="Text" id="nyruta" placeholder=">" required>--}}
-      <textarea name="Text" id="nyruta" rows="1" placeholder=">" onkeyup="auto_grow(this)"></textarea>
-      
+  <h1 ><a href="/" class="baffle">Minns vi den gången Zahabe...</a></h1>
 
-      <button type="submit" id="nybutton">></button>
-    </div>
-  </form>
-  
+  <div id="cli" class="sticky">
+
+    <div id="bash">></div><textarea name="Text" id="cli_input" rows="1" placeholder="_" onkeyup="auto_grow(this)"></textarea>
+    
+
+    <button type="submit" id="cli_button">></button>
+    
+    <div id="cli_output"></div>
+  </div>  
   <div id="dagens">
     <b>Dagens Zahabe:</b>
     <ol>
@@ -48,10 +38,6 @@
     </ol>
 
   </div>
-  {{!--<form id="admin">
-    <input id="adminpassword" type="password" name="password" required>
-    <input id="adminsubmit"type ="submit" formaction="#" class="button" value=">">
-  </form>--}}
 </div>
 
 <script>
