@@ -14,7 +14,7 @@
   <form id="MVform" action="#" method="post" accept-charset="utf-8" autocomplete="off">
     <div id="formbox">
       {{!--<input type="text" name="Text" id="nyruta" placeholder=">" required>--}}
-      <textarea name="Text" id="nyruta" rows="1" placeholder=">"></textarea>
+      <textarea name="Text" id="nyruta" rows="1" placeholder=">" onkeyup="auto_grow(this)"></textarea>
       
 
       <button type="submit" id="nybutton">></button>
@@ -27,35 +27,38 @@
         
       {{#if daily.Story}}
         <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
-        <a href='#'><li value='{{daily.cnt}}'><span>{{daily.Text}}</span></li></a>
+        <a href='#'><li value='{{daily.cnt}}'><span class="mvContent">{{daily.Text}}</span></li></a>
       {{else}}
-        <li value="{{daily.cnt}}">{{daily.Text}}</li>
+        <li value="{{daily.cnt}}"><span class="mvContent">{{daily.Text}}</span></li>
       {{/if}}
       
     </ol>
   </div>
   <div id="rows">
-    <ol reversed id="MVs">
+    <ol id="MVs">
       {{#each MVs}}
         {{#if this.Story}}
           <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
-          <a href='#'><li value="{{this.cnt}}" class='MV'><span>{{this.Text}}</span></li></a>
+          <a href='#'><li value="{{this.cnt}}" class='MV'><span class="mvContent">{{this.Text}}</span></li></a>
         {{else}}
-          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}">{{this.Text}}</li>
+          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
         {{/if}}
       {{/each}}
        
     </ol>
 
   </div>
-  <form id="admin">
+  {{!--<form id="admin">
     <input id="adminpassword" type="password" name="password" required>
     <input id="adminsubmit"type ="submit" formaction="#" class="button" value=">">
-  </form>
+  </form>--}}
 </div>
 
 <script>
-
+function auto_grow(element) {
+    element.style.height = "30px";
+    element.style.height = (element.scrollHeight)+"px";
+}
 
 
 </script>
