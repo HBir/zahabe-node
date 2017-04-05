@@ -111,6 +111,7 @@ textarea:focus {
     float: left;
     color: #fbf1c7;
     font: 30px "FantasqueSansMono", "courier";
+    max-height: 150px;
     /*margin-left: 0.1%;*/
 }
 

@@ -28,13 +28,35 @@ function cliInput(data) {
     console.log("'" + data.substring(0, 27) + "'");
     if (data == "-h" || (/-help.*/).test(data)) {
         /* Log out help commands */
-        cliIn($('#cli_input'));
-        cliOut(`-help  #shows all commands
--sad   #sd`)
+        cliClear();
+        cliOut(`-help -h  #Visa alla kommando
+Minns vi den gången Zahabe [text]? mvdgz [text]?  #Ny MV
+-edit [number] [new text]  #Redigera MV
+-delete [number]  #Ta bort MV
+-story show  #Visa alla MVs med story
+-story new  #Skapa en ny story
+-story edit [number]  #Redigera story
+-move [old number] [new number]  #Flytta MV
+-stats  #Visa statistik
+-search [term]  #Hitta alla MVs som innehåller term`);
 
     } else if ((data.substring(0, 27) == "Minns vi den gången Zahabe " || data.substring(0, 6) == "mvdgz ") && data.indexOf('?') > 0) {
         /* Add new MV */
-        cliOut(data);
+        data = data.substring(0, data.lastIndexOf('?') + 1);
+        if (data.substring(0, 6) == "mvdgz ") {
+            data = data.replace("mvdgz ", "Minns vi den gången Zahabe ");
+        }
+
+        $.ajax({
+                method: "POST",
+                url: "/api/mvs",
+                data: { mv: data }
+            })
+            .done(function(msg) {
+                cliClear();
+                cliOut("Successfully added MV:\n" + data);
+                console.log("Data Saved: " + msg);
+            });
         console.log(data);
     } else if (data.length > 0) {
         /* Error input */
@@ -45,8 +67,8 @@ function cliInput(data) {
     }
 };
 
-function cliIn(element, callback) {
-    let textbox = $(element);
+function cliClear(callback) {
+    let textbox = $('#cli_input');
     console.log(textbox.val());
     textbox.val("");
     // let i = 0;

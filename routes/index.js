@@ -27,21 +27,17 @@ app.get('/api/mvs', function(req, res, next) {
     })
 });
 
+app.post('/api/mvs', function(req, res, next) {
+    console.log(req.body.mv);
+    res.send('yes!');
+});
+
 module.exports = app;
 
 Promise.resolve()
     .then(() => db.open('./db/zahabe.sqlite', { Promise }))
     .catch(err => console.error(err.stack));
 // .finally(() => app.listen(port));
-
-function getAllMVs(callback) {
-    Promise.all([
-        db.all(`SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
-            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID ORDER BY MVOrder desc`, { Promise })
-    ]).then(function([mvs]) {
-        callback(mvs);
-    });
-}
 
 function getAllMVs(callback) {
     Promise.all([
