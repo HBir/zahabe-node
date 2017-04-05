@@ -112,7 +112,7 @@ textarea:focus {
     display: block;
     float: left;
     font: 30px "FantasqueSansMono", "courier";
-    height: 32px;
+    height: 31px;
     line-height: 32px;
     max-height: 150px;
     cursor: pointer;
