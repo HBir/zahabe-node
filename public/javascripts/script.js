@@ -27,11 +27,12 @@ $(document).on("keypress", "#cli_input", function(e) {
 function cliInput(input) {
     console.log("'" + input.substring(0, 27) + "'");
     if ((cliMatch(input, "Minns vi den gången Zahabe ") || cliMatch(input, "mvdgz ")) && input.indexOf('?') > 0) {
-        /* mvdgz - Add new MV */
+        /** mvdgz - Add new MV */
         input = input.substring(0, input.lastIndexOf('?') + 1);
         if (input.substring(0, 6) == "mvdgz ") {
             input = input.replace("mvdgz ", "Minns vi den gången Zahabe ");
         }
+        ajaxLoading(true);
         $.ajax({
                 method: "POST",
                 url: "/api/mvs",
@@ -43,27 +44,39 @@ function cliInput(input) {
                     cliOut("Something went wrong");
                 }
                 cliOut("Successfully added MV:\n" + input);
-                refreshMvs();
+                refreshMvs(true);
                 console.log("input Saved: " + msg);
             });
     } else if (cliMatch(input, "edit")) {
+        /** edit */
         cliOut('#Redigera MV\nedit [number] [new text]\n-Not yet implemented-');
     } else if (cliMatch(input, "delete")) {
+        /** delete */
         cliOut('#Ta bort MV\ndelete [number]\n-Not yet implemented-');
     } else if (cliMatch(input, "move")) {
+        /** move */
         cliOut('#Flytta MV\nmove [old number] [new number]\n-Not yet implemented-');
     } else if (cliMatch(input, "story")) {
+        /** story */
         cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Not yet implemented-');
     } else if (cliMatch(input, "search")) {
+        /** search */
         cliOut('#Hitta alla MVs som innehåller term\nsearch [term]\n-Not yet implemented-');
     } else if (cliMatch(input, "random")) {
+        /** random */
         cliOut('#Visa en slumpad MV\nrandom\n-Not yet implemented-');
     } else if (cliMatch(input, "mine")) {
+        /** mine */
         cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine\n-Not yet implemented-');
     } else if (cliMatch(input, "stats")) {
+        /** stats */
         cliOut('#Visa statistik\nstats\n-Not yet implemented-');
+    } else if (cliMatch(input, "test")) {
+        /** tests something */
+        refreshMvs();
+        cliOut('Testing');
     } else if (cliMatch(input, "h") || cliMatch(input, "help") || cliMatch(input, "man")) {
-        /* help - Log out help commands */
+        /** help - Log out help commands */
         cliClear();
         let output = `help, h  #Visa alla kommando
 Minns vi den gången Zahabe [text]?, mvdgz [text]?  #Ny MV
@@ -134,7 +147,8 @@ function cliOut(text, callback) {
 
 }
 
-function refreshMvs(force) {
+function refreshMvs(callback, force) {
+    ajaxLoading(true);
     $.ajax({
             method: "GET",
             url: "/api/mvs"
@@ -148,8 +162,22 @@ function refreshMvs(force) {
           <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
         {{/if}}
       {{/each}} */
+            let mvRows = ``;
+            for (var i = 0; i < res.length; i++) {
+                if (res[i].story !== null) {
+                    /* No story */
+                    mvRows += `<li class='MV' value="${res[i].cnt}" id="${res[i].cnt}"><span class="mvContent">${res[i].Text}</span></li>`
+                } else {
+                    /* With story */
+                    mvRows += `<li class='MV' value="${res[i].cnt}" id="${res[i].cnt}"><span class="mvContent">${res[i].Text}</span></li>`
+                }
+
+            }
+            $('#MVs').html(mvRows);
 
             console.log(res);
+            ajaxLoading(false);
+            callback();
         });
 }
 
@@ -158,6 +186,17 @@ function auto_grow(element) {
     element.style.height = (element.scrollHeight) + "px";
     $('#cli_button').css('height', element.scrollHeight);
     $('#bash').css('height', element.scrollHeight);
+}
+
+function ajaxLoading(on) {
+    if (on) {
+        $('#title').hide();
+        $('#ajax_loader').show();
+    } else {
+        $('#title').show();
+        $('#ajax_loader').hide();
+    }
+
 }
 
 function refreshPage(type) {
