@@ -1,2 +1,9 @@
 node_modules/
+<<<<<<< HEAD
 '*.sqlite' 
+=======
+db/
+*.sqlite
+*.sqlite
+db/zahabe.sqlite
+>>>>>>> 0cfe2fff5241b691dbd6eb5adbbf21ff66430ace

@@ -1,60 +1,46 @@
 
-
-<div id="sidebarLeft">
-    
-</div>
-<div id="sidebarRight">
-
-</div>
-
 <div id="wrapper">
-  <h1><a href="/">Minns vi den gången Zahabe...</a></h1>
-  <div id="errorspace"><!--Error messages appear here-->
-  
-  </div>
-  <div class="lank edit">
-    <a href="#" title="Attatchments"><img src="../images/read.png" alt="Attatchments"></a>
-      
-  </div>
-  <div class="lank edit rightmenu">
-    <a href="#" title="Edit" id="editActive"><img src="../images/edit.png" alt="edit"></a>
-  </div>
-  <form id="MVform" action="#" method="post" accept-charset="utf-8" autocomplete="off">
-    <div id="formbox">
-      <input type="text" name="Text" id="nyruta" placeholder="Ny" required>
-      <button type="submit" id="nybutton">Lägg till</button>
-    </div>
-  </form>
-  
+  <h1 id="title"><a href="/" class="baffle">minns vi den gången zahabe...</a></h1>
+  <h1 id="ajax_loader"><a href="/" class="baffle-forever">Minns vi den gången Zahabe...</a></h1>
+
+  <div id="cli" class="sticky">
+
+    <div id="bash">></div>
+    <textarea name="Text" id="cli_input" rows="1" placeholder="_" onkeyup="auto_grow(this)"></textarea>
+    <button type="submit" id="cli_button">=></button>
+    <div id="cli_output"></div>
+
+  </div>  
   <div id="dagens">
     <b>Dagens Zahabe:</b>
     <ol>
         
       {{#if daily.Story}}
         <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
-        <a href='#'><li value='{{daily.cnt}}'><span>{{daily.Text}}</span></li></a>
+        <a href='#'><li value='{{daily.cnt}}'><span class="mvContent">{{daily.Text}}</span></li></a>
       {{else}}
-        <li value="{{daily.cnt}}">{{daily.Text}}</li>
+        <li value="{{daily.cnt}}"><span class="mvContent">{{daily.Text}}</span></li>
       {{/if}}
       
     </ol>
   </div>
   <div id="rows">
-    <ol reversed id="MVs">
+    <ol id="MVs">
       {{#each MVs}}
         {{#if this.Story}}
-          <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
-          <a href='#'><li value="{{this.cnt}}" class='MV'><span>{{this.Text}}</span></li></a>
+          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">XX</span> {{this.Text}} <span class="baffle-forever">XX</span></span></li></a>
         {{else}}
-          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}">{{this.Text}}</li>
+          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
         {{/if}}
       {{/each}}
        
     </ol>
 
   </div>
-  <form id="admin">
-    <input id="adminpassword" type="password" name="password" required>
-    <input id="adminsubmit"type ="submit" formaction="#" class="button" value=">">
-  </form>
 </div>
+
+<script>
+
+
+
+</script>
