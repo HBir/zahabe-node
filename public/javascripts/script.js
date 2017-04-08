@@ -73,7 +73,8 @@ function cliInput(input) {
         cliOut('#Visa statistik\nstats\n-Not yet implemented-');
     } else if (cliMatch(input, "test")) {
         /** tests something */
-        refreshMvs();
+        // refreshMvs();
+        $('#MVs').html("");
         cliOut('Testing');
     } else if (cliMatch(input, "h") || cliMatch(input, "help") || cliMatch(input, "man")) {
         /** help - Log out help commands */
@@ -162,23 +163,26 @@ function refreshMvs(callback, force) {
           <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
         {{/if}}
       {{/each}} */
-            let mvRows = ``;
-            for (var i = 0; i < res.length; i++) {
-                if (res[i].story !== null) {
-                    /* No story */
-                    mvRows += `<li class='MV' value="${res[i].cnt}" id="${res[i].cnt}"><span class="mvContent">${res[i].Text}</span></li>`
-                } else {
-                    /* With story */
-                    mvRows += `<li class='MV' value="${res[i].cnt}" id="${res[i].cnt}"><span class="mvContent">${res[i].Text}</span></li>`
-                }
 
-            }
-            $('#MVs').html(mvRows);
-
-            console.log(res);
+            displayMvs(res);
             ajaxLoading(false);
             callback();
         });
+}
+
+function displayMvs(list) {
+    let mvRows = ``;
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].story !== null) {
+            /* No story */
+            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].Text}</span></li>`
+        } else {
+            /* With story */
+            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].Text}</span></li>`
+        }
+
+    }
+    $('#MVs').html(mvRows);
 }
 
 function auto_grow(element) {
