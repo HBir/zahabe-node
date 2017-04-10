@@ -7,7 +7,7 @@ import db from 'sqlite';
 // var dbObj = require("./db");
 
 console.log("DB info:");
-console.log(process.env.DB_DATABASE_URL);
+console.log(process.env.DATABASE_URL);
 console.log("----------");
 
 /* GET home page. */
