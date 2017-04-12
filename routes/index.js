@@ -15,6 +15,7 @@ let db = dbObj.connection;
 app.get('/', function(req, res, next) {
 
     getAllMVs(function(mvs) {
+
         var rng = new RNG(getDate());
         let daily = rng.nextRange(1, mvs.length)
         console.log(mvs[daily])

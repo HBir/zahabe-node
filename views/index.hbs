@@ -17,9 +17,9 @@
         
       {{#if daily.Story}}
         <div class='storyicon'><a href='#'><img src='images/read.png' alt='read full'></a></div>
-        <a href='#'><li value='{{daily.cnt}}'><span class="mvContent">{{daily.Text}}</span></li></a>
+        <a href='#'><li value='{{daily.cnt}}'><span class="mvContent">{{daily.text}}</span></li></a>
       {{else}}
-        <li value="{{daily.cnt}}"><span class="mvContent">{{daily.Text}}</span></li>
+        <li value="{{daily.cnt}}"><span class="mvContent">{{daily.text}}</span></li>
       {{/if}}
       
     </ol>
@@ -28,9 +28,9 @@
     <ol id="MVs">
       {{#each MVs}}
         {{#if this.Story}}
-          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">XX</span> {{this.Text}} <span class="baffle-forever">XX</span></span></li></a>
+          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">XX</span> {{this.text}} <span class="baffle-forever">XX</span></span></li></a>
         {{else}}
-          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
+          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.text}}</span></li>
         {{/if}}
       {{/each}}
        

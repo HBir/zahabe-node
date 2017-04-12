@@ -73,8 +73,8 @@ function cliInput(input) {
         cliOut('#Visa statistik\nstats\n-Not yet implemented-');
     } else if (cliMatch(input, "test")) {
         /** tests something */
-        // refreshMvs();
-        $('#MVs').html("");
+        refreshMvs();
+        // $('#MVs').html("");
         cliOut('Testing');
     } else if (cliMatch(input, "h") || cliMatch(input, "help") || cliMatch(input, "man")) {
         /** help - Log out help commands */
@@ -161,7 +161,7 @@ function refreshMvs(callback, force) {
           <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
         {{/if}}
       {{/each}} */
-
+            console.log(res);
             displayMvs(res);
             ajaxLoading(false);
             callback();
