@@ -38,6 +38,29 @@ app.post('/api/mvs', function(req, res, next) {
     console.log(req.body.mv);
     console.log(req.connection.remoteAddres);
     console.log(req.ip);
+
+    db.one(`INSERT INTO MinnsDu (Text, SkrivenAv)
+                VALUES ($1, $2)
+                RETURNING id`, [req.body.mv, req.connection.remoteAddres || req.ip])
+        .then(function(data) {
+            console.log(data.id);
+            db.none(`UPDATE MinnsDu
+                       SET MVOrder = $1
+                       WHERE ID = $1`, [data.id])
+                .then(function(data) {
+                    res.send({ status: "success" });
+                })
+                .catch(function(err) {
+                    console.log(err);
+                    return next(err);
+                });
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
+
+
     // try {
     //     Promise.all([
     //         db.run(`INSERT INTO MinnsDu (Text, SkrivenAv)
@@ -56,18 +79,8 @@ app.post('/api/mvs', function(req, res, next) {
 
 module.exports = app;
 
-// Promise.resolve()
-//     .then(() => db.open('./db/zahabe.sqlite', { Promise }))
-//     .catch(err => console.error(err.stack));
-// // .finally(() => app.listen(port));
 
 function getAllMVs(callback) {
-    // Promise.all([
-    //     db.all(`SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
-    //         FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID ORDER BY MVOrder desc`)
-    // ]).then(function([mvs]) {
-    //     callback(mvs);
-    // });
 
     db.any(`
             SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
