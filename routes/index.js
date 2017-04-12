@@ -37,28 +37,28 @@ app.post('/api/mvs', function(req, res, next) {
     console.log(req.body.mv);
     console.log(req.connection.remoteAddres);
     console.log(req.ip);
-    try {
-        Promise.all([
-            db.run(`INSERT INTO MinnsDu (Text, SkrivenAv)
-                    VALUES ($mv, $ip)`, { $mv: req.body.mv, $ip: req.ip }),
-            db.run(`UPDATE MinnsDu
-                    SET MVOrder = last_insert_rowid()
-                    WHERE ID = last_insert_rowid()`),
+    // try {
+    //     Promise.all([
+    //         db.run(`INSERT INTO MinnsDu (Text, SkrivenAv)
+    //                 VALUES ($mv, $ip)`, { $mv: req.body.mv, $ip: req.ip }),
+    //         db.run(`UPDATE MinnsDu
+    //                 SET MVOrder = last_insert_rowid()
+    //                 WHERE ID = last_insert_rowid()`),
 
-        ]).then(function(result) {
-            res.send({ status: "success" });
-        });
-    } catch (err) {
-        res.send({ status: "error" })
-    }
+    //     ]).then(function(result) {
+    //         res.send({ status: "success" });
+    //     });
+    // } catch (err) {
+    //     res.send({ status: "error" })
+    // }
 });
 
 module.exports = app;
 
-Promise.resolve()
-    .then(() => db.open('./db/zahabe.sqlite', { Promise }))
-    .catch(err => console.error(err.stack));
-// .finally(() => app.listen(port));
+// Promise.resolve()
+//     .then(() => db.open('./db/zahabe.sqlite', { Promise }))
+//     .catch(err => console.error(err.stack));
+// // .finally(() => app.listen(port));
 
 function getAllMVs(callback) {
     // Promise.all([

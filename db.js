@@ -12,8 +12,7 @@ console.log("----------");
 let options = {
     // Initialization Options
     promiseLib: promise,
-    capSQL: true,
-    ssl: true
+    capSQL: true
 };
 
 db.pgp = require('pg-promise')(options);
