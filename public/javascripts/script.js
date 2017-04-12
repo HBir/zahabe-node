@@ -43,7 +43,7 @@ function cliInput(input) {
                 if (msg.status == "error") {
                     cliOut("Something went wrong");
                 }
-                cliOut(input);
+                // cliOut(input);
                 refreshPage('add');
                 console.log("input Saved: " + msg);
             });
@@ -149,7 +149,7 @@ function refreshMvs(callback, force) {
         });
 }
 
-function displayMvs(list) {
+function displayMvs(list, method) {
     let mvRows = ``;
     for (var i = 0; i < list.length; i++) {
         if (list[i].story === null) {
@@ -161,7 +161,11 @@ function displayMvs(list) {
         }
 
     }
-    $('#MVs').html(mvRows);
+    if (method == 'prepend') {
+        $('#MVs').prepend(mvRows);
+    } else {
+        $('#MVs').html(mvRows);
+    }
 }
 
 function auto_grow(element) {
@@ -215,8 +219,12 @@ function refreshPage(type) {
         var newList = data.length;
         localStorage.setItem("MVAmount", newList);
         if (newList != oldList) {
-            displayMvs(data);
-            if (newList - oldList > 0) {
+            console.log(data);
+            let diff = newList - oldList;
+
+            if (diff > 0) {
+                data = data.slice(0, diff);
+                displayMvs(data, 'prepend');
                 /*Här hanteras uppdateringsmeddelande för nya inlägg*/
                 if (oldList !== 0 && type != "add" && document.hasFocus() === false) {
 
@@ -228,6 +236,8 @@ function refreshPage(type) {
                     }
                 }
                 oldList = newList;
+            } else {
+                displayMvs(data);
             }
         }
     });
