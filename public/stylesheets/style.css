@@ -10,7 +10,7 @@
     /* gruvbox colors: */
     --fg0: #EAEAEA;
     --fg2: #fff;
-    --fg4: #605D5D;
+    --fg4: #A048BD;
     --bg1: #2b2b2b;
     --bg2: #504945;
     --cli: #1b1b1b;
@@ -28,6 +28,7 @@
     --fg3: #bdae93;
     --red: #cc241d, #cc241d;
     --gray: #928374;
+    --darkpurple: #3C0080;
 }
 
 ol,
@@ -44,6 +45,7 @@ body {
     margin-top: 0px;
     margin-bottom: 0px;
     margin: 0px;
+    background-color: var(--bg1);
 }
 
 .mvContent {
@@ -52,11 +54,11 @@ body {
 
 h1 {
     font-size: 30px;
-    margin-left: 45px
+    margin-left: 45px;
+    letter-spacing: 6px;
 }
 
 #wrapper {
-    background-color: var(--bg1);
     margin: 0 auto;
     margin-top: 0px;
     width: 100%;
@@ -328,6 +330,15 @@ a li span:hover {
         width: calc(100% - 57px);
         margin-left: 57px;
     }
+    h1 {
+        letter-spacing: 0.2vw;
+        font-size: 6.2vw;
+        margin-left: 0px;
+    }
+    #dagens {
+        width: 100%!important;
+        margin-left: 0px!important;
+    }
 }
 
 
@@ -456,150 +467,4 @@ hr {
     width: 150px;
     font: 20px "Open Sans", "sans-serif";
     float: left;
-}
-
-.glitch {
-    -webkit-animation: glitch1 2.5s infinite;
-    animation: glitch1 2.5s infinite;
-}
-
-span.glitch {
-    -webkit-animation: glitch1 1.5s infinite;
-    animation: glitch1 1.5s infinite;
-}
-
-@-webkit-keyframes glitch1 {
-    0% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    7% {
-        -webkit-transform: skew(-0.5deg, -0.9deg);
-        transform: skew(-0.5deg, -0.9deg);
-        opacity: 0.75;
-    }
-    10% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    27% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    30% {
-        -webkit-transform: skew(0.8deg, -0.1deg);
-        transform: skew(0.8deg, -0.1deg);
-        opacity: 0.75;
-    }
-    35% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    52% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    55% {
-        -webkit-transform: skew(-1deg, 0.2deg);
-        transform: skew(-1deg, 0.2deg);
-        opacity: 0.75;
-    }
-    50% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    72% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    75% {
-        -webkit-transform: skew(0.4deg, 1deg);
-        transform: skew(0.4deg, 1deg);
-        opacity: 0.75;
-    }
-    80% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    100% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-}
-
-@keyframes glitch1 {
-    0% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    7% {
-        -webkit-transform: skew(-0.5deg, -0.9deg);
-        transform: skew(-0.5deg, -0.9deg);
-        opacity: 0.75;
-    }
-    10% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    27% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    30% {
-        -webkit-transform: skew(0.8deg, -0.1deg);
-        transform: skew(0.8deg, -0.1deg);
-        opacity: 0.75;
-    }
-    35% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    52% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    55% {
-        -webkit-transform: skew(-1deg, 0.2deg);
-        transform: skew(-1deg, 0.2deg);
-        opacity: 0.75;
-    }
-    50% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    72% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    75% {
-        -webkit-transform: skew(0.4deg, 1deg);
-        transform: skew(0.4deg, 1deg);
-        opacity: 0.75;
-    }
-    80% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
-    100% {
-        -webkit-transform: none;
-        transform: none;
-        opacity: 1;
-    }
 }

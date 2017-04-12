@@ -2,8 +2,13 @@ let db = {};
 
 console.log("hehehey");
 let promise = require('bluebird');
-let connectionString = process.env.DB_DATABASE_URL ||
+let connectionString = process.env.DATABASE_URL ||
     'postgres://jyvvhsducxvnjv:31632077757e9989f04b8a5fcfec53e63a20e8958f93bd5c2bac2dd6ca9b749b@ec2-54-217-222-254.eu-west-1.compute.amazonaws.com:5432/d63as1gbbvhhmt';
+
+console.log("DB info:");
+console.log(connectionString);
+console.log("----------");
+
 let options = {
     // Initialization Options
     promiseLib: promise,

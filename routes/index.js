@@ -4,11 +4,9 @@ import Promise from 'bluebird';
 // var sqlite3  = require("sqlite3");
 import db from 'sqlite';
 
-// var dbObj = require("./db");
+var dbObj = require("../db");
 
-console.log("DB info:");
-console.log(process.env.DATABASE_URL);
-console.log("----------");
+
 
 /* GET home page. */
 app.get('/', function(req, res, next) {

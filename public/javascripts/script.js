@@ -111,32 +111,20 @@ function cliMatch(string, match) {
 }
 
 function cliClear(callback) {
-    let textbox = $('#cli_input');
+    let textbox = $('#cli_input_text');
     console.log(textbox.val());
     textbox.val("");
-    // let i = 0;
-    // (function removeLetter() {
-    //     if (textbox.val() !== "") {
-    //         textbox.val(textbox.val().substring(1, textbox.val().length));
-    //         i++;
-    //         setTimeout(removeLetter, 1);
-    //     } else {
-    //         console.log("complete");
-    //         if (callback) {
-    //             callback();
-    //         }
-    //     }
-    // })();
 }
 
 function cliOut(text, callback) {
     $('#cli_output').show();
-    $('#cli_output').html("");
+    $('#cli_output_text').html("");
 
     let i = 0;
     (function printLetter() {
+        console.log(makeid());
         if (i < text.length) {
-            $('#cli_output').append(text[i]);
+            $('#cli_output_text').append(text[i]);
             i++;
             setTimeout(printLetter, 1);
         } else {
@@ -146,6 +134,16 @@ function cliOut(text, callback) {
         }
     })();
 
+}
+
+function makeid() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
 }
 
 function refreshMvs(callback, force) {
