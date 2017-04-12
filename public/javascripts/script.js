@@ -173,10 +173,10 @@ function displayMvs(list) {
     for (var i = 0; i < list.length; i++) {
         if (list[i].story !== null) {
             /* No story */
-            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].Text}</span></li>`
+            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].text}</span></li>`
         } else {
             /* With story */
-            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].Text}</span></li>`
+            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].text}</span></li>`
         }
 
     }
