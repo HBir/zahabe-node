@@ -2,9 +2,12 @@ import express from 'express';
 var app = express();
 import Promise from 'bluebird';
 // var sqlite3  = require("sqlite3");
-import db from 'sqlite';
+
 
 var dbObj = require("../db");
+
+let pgp = dbObj.pgp;
+let db = dbObj.connection;
 
 
 
@@ -58,12 +61,30 @@ Promise.resolve()
 // .finally(() => app.listen(port));
 
 function getAllMVs(callback) {
-    Promise.all([
-        db.all(`SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
-            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID ORDER BY MVOrder desc`)
-    ]).then(function([mvs]) {
-        callback(mvs);
-    });
+    // Promise.all([
+    //     db.all(`SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+    //         FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID ORDER BY MVOrder desc`)
+    // ]).then(function([mvs]) {
+    //     callback(mvs);
+    // });
+
+    db.any(`
+            SELECT Text, ID, Story FROM minnsdu a
+            LEFT JOIN stories ON a.ID = stories.MVID
+            ORDER BY MVOrder desc`)
+        .then(function(data) {
+            callback(data)
+                // res.status(200)
+                //     .send({
+                //         status: 'success',
+                //         data: data.rows,
+                //         message: 'Retrieved ALL users'
+                //     });
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
 }
 
 function getDate() {
