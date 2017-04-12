@@ -67,7 +67,17 @@ function cliInput(input) {
         cliOut('#Visa en slumpad MV\nrandom\n-Not yet implemented-');
     } else if (cliMatch(input, "mine")) {
         /** mine */
-        cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine\n-Not yet implemented-');
+
+        ajaxLoading(true);
+        $.ajax({
+                method: "GET",
+                url: "/api/my-mvs"
+            })
+            .done(function(res) {
+                displayMvs(res);
+                ajaxLoading(false);
+            });
+        cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine');
     } else if (cliMatch(input, "stats")) {
         /** stats */
         cliOut('#Visa statistik\nstats\n-Not yet implemented-');
@@ -243,129 +253,129 @@ function refreshPage(type) {
     });
 }
 
-function isBlank(str) {
-    return (!str || /^\s*$/.test(str));
-}
+// function isBlank(str) {
+//     return (!str || /^\s*$/.test(str));
+// }
 
-function refreshEditPage() {
+// function refreshEditPage() {
 
-    clearInterval(timer);
+//     clearInterval(timer);
 
-    timer = null;
-    $(".MVEdit").parent().hide().slideDown();
-    $.get("ajaxEditUI.php", function(data) {
+//     timer = null;
+//     $(".MVEdit").parent().hide().slideDown();
+//     $.get("ajaxEditUI.php", function(data) {
 
-        $("#MVs").html(data);
-        editButtonFunctionality(data);
+//         $("#MVs").html(data);
+//         editButtonFunctionality(data);
 
-    });
+//     });
 
-}
+// }
 
-function editButtonFunctionality(data) {
-    /*Knapp för att ta bort MV*/
-    $(".MVCross").click(function(e2) {
-        e2.preventDefault();
-        console.log($(this).attr("destinationurl"));
-        removeMV($(this).attr("destinationurl"));
-    });
-    /*Knapp för att ändra MV*/
-    $(".MVEdit").click(function(e) {
-        e.preventDefault();
+// function editButtonFunctionality(data) {
+//     /*Knapp för att ta bort MV*/
+//     $(".MVCross").click(function(e2) {
+//         e2.preventDefault();
+//         console.log($(this).attr("destinationurl"));
+//         removeMV($(this).attr("destinationurl"));
+//     });
+//     /*Knapp för att ändra MV*/
+//     $(".MVEdit").click(function(e) {
+//         e.preventDefault();
 
 
-        var MV = $(this).parent().next().next();
-        var nr = $(MV).val();
-        var id = $(this).attr('destinationurl');
-        console.log(id);
-        var text = $(MV).text();
-        $(MV).css("list-style-type", "none");
-        $(MV).hide().html('<form class="EditForm" action="" method="post" accept-charset="utf-8" autocomplete="off">' +
-            '<input name="id" type="hidden"  value="' + id + '">' +
-            '<input type="integer" name="newPos" class="editPos" placeholder="#" value="' + nr + '">' +
-            '<textarea name="Text" class="editRuta">' + text + '</textarea></form>').slideDown();
+//         var MV = $(this).parent().next().next();
+//         var nr = $(MV).val();
+//         var id = $(this).attr('destinationurl');
+//         console.log(id);
+//         var text = $(MV).text();
+//         $(MV).css("list-style-type", "none");
+//         $(MV).hide().html('<form class="EditForm" action="" method="post" accept-charset="utf-8" autocomplete="off">' +
+//             '<input name="id" type="hidden"  value="' + id + '">' +
+//             '<input type="integer" name="newPos" class="editPos" placeholder="#" value="' + nr + '">' +
+//             '<textarea name="Text" class="editRuta">' + text + '</textarea></form>').slideDown();
 
-        $(this).html("<img src='assets/check.png' alt='edit'>");
-        $(this).addClass('confirmEdit').removeClass('MVEdit');
-        $(this).unbind("click");
-        /*Knapp för att confirma ändring av MV*/
-        $(this).click(function(event) {
-            event.preventDefault();
-            var url = "ajaxEditMV.php";
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: $(MV).find("form").serialize(),
-                success: function(data) {
-                    showMessage(data);
-                    refreshEditPage();
-                },
-                /*Visar ett felmeddelande beroende på vilken HTTP-statuskod skickas tillbaka*/
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    switch (errorThrown) {
-                        case "Not Acceptable":
-                            showMessage("...inte förstod");
-                            break;
-                        case "Conflict":
-                            showMessage("...försökte duplicera sin död");
-                            break;
-                        case "Forbidden":
-                            showMessage("...hittade det förbjudna");
-                            break;
-                        case "Unauthorized":
-                            showMessage("...gjorde bort sig totalt");
-                            break;
-                        default:
-                            showMessage("...fick " + errorThrown);
-                    }
-                }
-            });
-        });
-    });
-}
+//         $(this).html("<img src='assets/check.png' alt='edit'>");
+//         $(this).addClass('confirmEdit').removeClass('MVEdit');
+//         $(this).unbind("click");
+//         /*Knapp för att confirma ändring av MV*/
+//         $(this).click(function(event) {
+//             event.preventDefault();
+//             var url = "ajaxEditMV.php";
+//             $.ajax({
+//                 type: "POST",
+//                 url: url,
+//                 data: $(MV).find("form").serialize(),
+//                 success: function(data) {
+//                     showMessage(data);
+//                     refreshEditPage();
+//                 },
+//                 /*Visar ett felmeddelande beroende på vilken HTTP-statuskod skickas tillbaka*/
+//                 error: function(XMLHttpRequest, textStatus, errorThrown) {
+//                     switch (errorThrown) {
+//                         case "Not Acceptable":
+//                             showMessage("...inte förstod");
+//                             break;
+//                         case "Conflict":
+//                             showMessage("...försökte duplicera sin död");
+//                             break;
+//                         case "Forbidden":
+//                             showMessage("...hittade det förbjudna");
+//                             break;
+//                         case "Unauthorized":
+//                             showMessage("...gjorde bort sig totalt");
+//                             break;
+//                         default:
+//                             showMessage("...fick " + errorThrown);
+//                     }
+//                 }
+//             });
+//         });
+//     });
+// }
 
-function removeMV(id) {
-    var r = confirm("Säker på att du vill ta bort " + id + "?");
-    if (r == true) {
-        $.ajax({
-            url: "ajaxRemove.php",
-            type: "POST",
-            data: { id: id },
-            success: function(data) {
-                console.log("Removed:" + data);
-                refreshEditPage();
-            }
-        });
-    } else {
-        return;
-    }
-}
+// function removeMV(id) {
+//     var r = confirm("Säker på att du vill ta bort " + id + "?");
+//     if (r == true) {
+//         $.ajax({
+//             url: "ajaxRemove.php",
+//             type: "POST",
+//             data: { id: id },
+//             success: function(data) {
+//                 console.log("Removed:" + data);
+//                 refreshEditPage();
+//             }
+//         });
+//     } else {
+//         return;
+//     }
+// }
 
-function showMessage(message) {
-    if (isBlank($('#errorspace').text())) {
-        $('#errorspace').hide().html(message).slideDown();
-    } else {
-        $('#errorspace').hide().html(message).fadeIn();
-    }
-}
+// function showMessage(message) {
+//     if (isBlank($('#errorspace').text())) {
+//         $('#errorspace').hide().html(message).slideDown();
+//     } else {
+//         $('#errorspace').hide().html(message).fadeIn();
+//     }
+// }
 
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-}
+// function setCookie(cname, cvalue, exdays) {
+//     var d = new Date();
+//     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+//     var expires = "expires=" + d.toUTCString();
+//     document.cookie = cname + "=" + cvalue + "; " + expires;
+// }
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
-    }
-    return "";
-}
+// function getCookie(cname) {
+//     var name = cname + "=";
+//     var ca = document.cookie.split(';');
+//     for (var i = 0; i < ca.length; i++) {
+//         var c = ca[i];
+//         while (c.charAt(0) == ' ') c = c.substring(1);
+//         if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+//     }
+//     return "";
+// }
 
 
 

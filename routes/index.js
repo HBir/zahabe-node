@@ -28,10 +28,41 @@ app.get('/', function(req, res, next) {
 
 });
 
+function getAllMVs(callback) {
+    db.any(`
+            SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID 
+            ORDER BY MVOrder desc`)
+        .then(function(data) {
+            callback(data)
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
+}
+
 app.get('/api/mvs', function(req, res, next) {
     getAllMVs(function(mvs) {
         res.send(mvs);
     })
+});
+
+
+app.get('/api/my-mvs', function(req, res, next) {
+    db.any(`
+            SELECT Text, ID, Story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
+			WHERE skrivenav = $1
+            ORDER BY MVOrder desc
+            `, [req.connection.remoteAddres || req.ip])
+        .then(function(data) {
+            res.send(data);
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
 });
 
 app.post('/api/mvs', function(req, res, next) {
@@ -59,47 +90,12 @@ app.post('/api/mvs', function(req, res, next) {
             console.log(err);
             return next(err);
         });
-
-
-    // try {
-    //     Promise.all([
-    //         db.run(`INSERT INTO MinnsDu (Text, SkrivenAv)
-    //                 VALUES ($mv, $ip)`, { $mv: req.body.mv, $ip: req.ip }),
-    //         db.run(`UPDATE MinnsDu
-    //                 SET MVOrder = last_insert_rowid()
-    //                 WHERE ID = last_insert_rowid()`),
-
-    //     ]).then(function(result) {
-    //         res.send({ status: "success" });
-    //     });
-    // } catch (err) {
-    //     res.send({ status: "error" })
-    // }
 });
 
 module.exports = app;
 
 
-function getAllMVs(callback) {
 
-    db.any(`
-            SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
-            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID 
-            ORDER BY MVOrder desc`)
-        .then(function(data) {
-            callback(data)
-                // res.status(200)
-                //     .send({
-                //         status: 'success',
-                //         data: data.rows,
-                //         message: 'Retrieved ALL users'
-                //     });
-        })
-        .catch(function(err) {
-            console.log(err);
-            return next(err);
-        });
-}
 
 function getDate() {
     var date = new Date();
