@@ -70,8 +70,8 @@ function getAllMVs(callback) {
     // });
 
     db.any(`
-            SELECT Text, ID, Story FROM minnsdu a
-            LEFT JOIN stories ON a.ID = stories.MVID
+            SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID 
             ORDER BY MVOrder desc`)
         .then(function(data) {
             callback(data)
