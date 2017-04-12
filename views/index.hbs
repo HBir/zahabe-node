@@ -8,7 +8,7 @@
     <div id="bash">></div>
     <textarea name="Text" id="cli_input" rows="1" placeholder="_" onkeyup="auto_grow(this)"></textarea>
     <button type="submit" id="cli_button">></button>
-    <div id="cli_output"><span id="cli_output_text"></span><span class="baffle-forever">X</span></div>
+    <div id="cli_output"><span id="cli_output_text"></span><span class="baffle-forever">#</span></div>
 
   </div>  
   <div id="dagens">
@@ -28,7 +28,7 @@
     <ol id="MVs">
       {{#each MVs}}
         {{#if this.Story}}
-          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">XX</span> {{this.text}} <span class="baffle-forever">XX</span></span></li></a>
+          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">##</span> {{this.text}} <span class="baffle-forever">##</span></span></li></a>
         {{else}}
           <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.text}}</span></li>
         {{/if}}

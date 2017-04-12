@@ -1,8 +1,8 @@
 /*Globala variabler*/
-var newMvs = 0;
-var oldList = 0;
-var newList = 0;
-var timer = null;
+let newMvs = 0;
+let oldList = 0;
+let newList = 0;
+let timer = null;
 
 console.log("script loaded");
 $(document).ready(function() {
@@ -43,8 +43,8 @@ function cliInput(input) {
                 if (msg.status == "error") {
                     cliOut("Something went wrong");
                 }
-                cliOut("Successfully added MV:\n" + input);
-                refreshMvs(true);
+                cliOut(input);
+                refreshPage('add');
                 console.log("input Saved: " + msg);
             });
     } else if (cliMatch(input, "edit")) {
@@ -111,7 +111,7 @@ function cliMatch(string, match) {
 }
 
 function cliClear(callback) {
-    let textbox = $('#cli_input_text');
+    let textbox = $('#cli_input');
     console.log(textbox.val());
     textbox.val("");
 }
@@ -122,7 +122,6 @@ function cliOut(text, callback) {
 
     let i = 0;
     (function printLetter() {
-        console.log(makeid());
         if (i < text.length) {
             $('#cli_output_text').append(text[i]);
             i++;
@@ -136,16 +135,6 @@ function cliOut(text, callback) {
 
 }
 
-function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
-
 function refreshMvs(callback, force) {
     ajaxLoading(true);
     $.ajax({
@@ -153,14 +142,6 @@ function refreshMvs(callback, force) {
             url: "/api/mvs"
         })
         .done(function(res) {
-            /*       
-      {{#each MVs}}
-        {{#if this.Story}}
-          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">XX</span> {{this.Text}} <span class="baffle-forever">XX</span></span></li></a>
-        {{else}}
-          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.Text}}</span></li>
-        {{/if}}
-      {{/each}} */
             console.log(res);
             displayMvs(res);
             ajaxLoading(false);
@@ -171,12 +152,12 @@ function refreshMvs(callback, force) {
 function displayMvs(list) {
     let mvRows = ``;
     for (var i = 0; i < list.length; i++) {
-        if (list[i].story !== null) {
+        if (list[i].story === null) {
             /* No story */
-            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].text}</span></li>`
+            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].text}</span></li>`;
         } else {
             /* With story */
-            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].text}</span></li>`
+            mvRows += `<li class='MV glitch' value="${list[i].cnt}" id="${list[i].cnt}"><span class="baffle-forever">##</span> <span class="mvContent">${list[i].text}</span> <span class="baffle-forever">##</span></li>`
         }
 
     }
@@ -201,24 +182,49 @@ function ajaxLoading(on) {
 
 }
 
+$(window).load(function() {
+    /*Init*/
+    oldList = document.getElementById("MVs").getElementsByTagName("li").length;
+    var cookiedList = localStorage.getItem("MVAmount");
+    if (cookiedList) {
+        for (i = 1; i <= oldList - cookiedList; i++) {
+            $("#MVs li:nth-child(" + i + ")").addClass('newMV');
+        }
+    }
+
+    setInterval(function() { refreshPage(); }, 5000);
+});
+
+$(window).focus(function() {
+    /*Tar bort uppdateringsmeddelanden när sidan får fokus*/
+    document.title = "Minns vi den gången Zahabe";
+    newMvs = 0;
+});
+
+$(window).blur(function() {
+    /*Tar bort uppdateringsmarkeringar när sidan tappar fokus*/
+    $(".newMV").removeClass('newMV');
+});
+
 function refreshPage(type) {
+    console.log("auto refreshing");
     /*Kollar om några nya inlägg har lagts till och uppdaterar sidan asynkront ifall så är fallet*/
-    $.get("ajaxMV.php", function(data) {
-        var newList = (data.match(/<li/g) || []).length;
-        setCookie("MVAmount", newList, 50);
+    ajaxLoading(true);
+    $.get("/api/mvs", function(data) {
+        ajaxLoading(false);
+        var newList = data.length;
+        localStorage.setItem("MVAmount", newList);
         if (newList != oldList) {
-            $("#MVs").html(data);
+            displayMvs(data);
             if (newList - oldList > 0) {
                 /*Här hanteras uppdateringsmeddelande för nya inlägg*/
-                if (oldList != 0 && type != "add" && document.hasFocus() == false) {
+                if (oldList !== 0 && type != "add" && document.hasFocus() === false) {
 
                     newMvs = newMvs + (newList - oldList);
                     document.title = "(" + newMvs + ") Minns vi den gången Zahabe";
 
                     for (i = 1; i <= newMvs; i++) {
-                        $("#MVs li:nth-child(" + i + ")").css('background-color', '#DCDCDC');
-                        $("#MVs li:nth-child(" + i + ")").css('border-radius', '10px');
-                        $("#MVs li:nth-child(" + i + ")").css('padding', '5px');
+                        $("#MVs li:nth-child(" + i + ")").addClass('newMV');
                     }
                 }
                 oldList = newList;
