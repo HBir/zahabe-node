@@ -3,6 +3,7 @@ let newMvs = 0;
 let oldList = 0;
 let newList = 0;
 let timer = null;
+let pauseRefresh = false;
 
 console.log("script loaded");
 $(document).ready(function() {
@@ -44,7 +45,7 @@ function cliInput(input) {
                     cliOut("Something went wrong");
                 }
                 // cliOut(input);
-                refreshPage('add');
+                refreshMvs('add');
                 console.log("input Saved: " + msg);
             });
     } else if (cliMatch(input, "edit")) {
@@ -52,7 +53,26 @@ function cliInput(input) {
         cliOut('#Redigera MV\nedit [number] [new text]\n-Not yet implemented-');
     } else if (cliMatch(input, "delete")) {
         /** delete */
-        cliOut('#Ta bort MV\ndelete [number]\n-Not yet implemented-');
+
+        let id = findSubstring("delete+\\s([0-9]*)", input)
+
+        $('#dagens').hide();
+        $('.MV').hide();
+        $('#' + id).show();
+        cliClear();
+        cliOut('Säker på att du vill ta bort? (y/n)')
+
+        $.ajax({
+                method: "DELETE",
+                url: "/api/mvs",
+                data: { input: input }
+            })
+            .done(function(res) {
+                console.log(res);
+                refreshMvs();
+                ajaxLoading(false);
+            });
+        // cliOut('#Ta bort MV\ndelete [number]\n-Not yet implemented-');
     } else if (cliMatch(input, "move")) {
         /** move */
         cliOut('#Flytta MV\nmove [old number] [new number]\n-Not yet implemented-');
@@ -61,6 +81,19 @@ function cliInput(input) {
         cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Not yet implemented-');
     } else if (cliMatch(input, "search")) {
         /** search */
+
+        let term = findSubstring("search\\s(.*)", input);
+        ajaxLoading(true);
+        pauseRefresh = true;
+        $.ajax({
+                method: "GET",
+                url: "/api/search",
+                data: { input: term }
+            })
+            .done(function(res) {
+                displayMvs(res);
+                ajaxLoading(false);
+            });
         cliOut('#Hitta alla MVs som innehåller term\nsearch [term]\n-Not yet implemented-');
     } else if (cliMatch(input, "random")) {
         /** random */
@@ -69,6 +102,7 @@ function cliInput(input) {
         /** mine */
 
         ajaxLoading(true);
+        pauseRefresh = true;
         $.ajax({
                 method: "GET",
                 url: "/api/my-mvs"
@@ -145,19 +179,31 @@ function cliOut(text, callback) {
 
 }
 
-function refreshMvs(callback, force) {
-    ajaxLoading(true);
-    $.ajax({
-            method: "GET",
-            url: "/api/mvs"
-        })
-        .done(function(res) {
-            console.log(res);
-            displayMvs(res);
-            ajaxLoading(false);
-            callback();
-        });
+function findSubstring(regexp, text) {
+    let find = new RegExp(regexp, 'i');
+    let match = find.exec(text);
+    let val;
+    if (match) {
+        // console.log(match);
+        val = match[1];
+    }
+    console.log(val);
+    return val;
 }
+
+// function refreshMvs(callback, force) {
+//     ajaxLoading(true);
+//     $.ajax({
+//             method: "GET",
+//             url: "/api/mvs"
+//         })
+//         .done(function(res) {
+//             console.log(res);
+//             displayMvs(res);
+//             ajaxLoading(false);
+//             callback();
+//         });
+// }
 
 function displayMvs(list, method) {
     let mvRows = ``;
@@ -206,7 +252,11 @@ $(window).load(function() {
         }
     }
 
-    setInterval(function() { refreshPage(); }, 5000);
+    setInterval(function() {
+        if (!pauseRefresh) {
+            refreshMvs();
+        }
+    }, 5000);
 });
 
 $(window).focus(function() {
@@ -220,7 +270,7 @@ $(window).blur(function() {
     $(".newMV").removeClass('newMV');
 });
 
-function refreshPage(type) {
+function refreshMvs(type) {
     console.log("auto refreshing");
     /*Kollar om några nya inlägg har lagts till och uppdaterar sidan asynkront ifall så är fallet*/
     ajaxLoading(true);
@@ -402,7 +452,7 @@ function refreshPage(type) {
 //             success: function(data) {
 //                 document.getElementById("cli_input").value = '';
 //                 $('#errorspace').html("");
-//                 refreshPage("add");
+//                 refreshMvs("add");
 //             },
 //             Visar ett felmeddelande beroende på vilken HTTP-statuskod skickas tillbaka
 //             error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -456,7 +506,7 @@ function refreshPage(type) {
 //         }
 //     }
 
-//     timer = setInterval("refreshPage('')", 5000);
+//     timer = setInterval("refreshMvs('')", 5000);
 // });
 
 

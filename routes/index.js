@@ -1,8 +1,7 @@
 import express from 'express';
 var app = express();
 import Promise from 'bluebird';
-// var sqlite3  = require("sqlite3");
-
+let exec = require('child_process').exec;
 
 var dbObj = require("../db");
 
@@ -63,6 +62,38 @@ app.get('/api/my-mvs', function(req, res, next) {
             console.log(err);
             return next(err);
         });
+});
+
+app.get('/api/search', function(req, res, next) {
+    console.log(req.query);
+    db.any(`
+            SELECT Text, ID, Story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
+			WHERE text LIKE $1
+            ORDER BY MVOrder desc
+
+            `, ["%" + req.query.input + "%"])
+        .then(function(data) {
+            res.send(data);
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
+});
+
+app.delete('/api/mvs', function(req, res, next) {
+    let findId = new RegExp("delete+\\s([0-9]*)", 'i');
+    let idMatch = findId.exec(req.body.input);
+    let id;
+    console.log(req.body.input);
+    console.log(idMatch);
+    if (idMatch) {
+        console.log(idMatch);
+        id = idMatch[1];
+    }
+    console.log(id);
+    res.send(id);
 });
 
 app.post('/api/mvs', function(req, res, next) {
