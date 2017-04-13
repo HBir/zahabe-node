@@ -94,7 +94,7 @@ function cliInput(input) {
                 displayMvs(res);
                 ajaxLoading(false);
             });
-        cliOut('#Hitta alla MVs som innehåller term\nsearch [term]\n-Not yet implemented-');
+        // cliOut('#Hitta alla MVs som innehåller term\nsearch [term]');
     } else if (cliMatch(input, "random")) {
         /** random */
         cliOut('#Visa en slumpad MV\nrandom\n-Not yet implemented-');
