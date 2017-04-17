@@ -68,7 +68,7 @@ function cliInput(input) {
     } else if (cliMatch(input, "delete") || cliMatch(input, "d")) {
         /** delete */
 
-        let id = findSubstring("d+\\s*([0-9]*)", input)
+        let id = findSubstring("d(elete)?\\s*([0-9]*)", input, 2);
 
         if ($('#' + id).length > 0) {
             $('#dagens').hide();
@@ -81,7 +81,7 @@ function cliInput(input) {
                 ajaxLoading(true);
                 $.ajax({
                     method: "DELETE",
-                    url: "/mvs/"+id
+                    url: "/api/mvs/"+id
                 })
                 .done(function(res) {
                     displayMvs(res);
@@ -201,13 +201,16 @@ function cliOut(text, callback) {
 
 }
 
-function findSubstring(regexp, text) {
+function findSubstring(regexp, text, matchIndex) {
+    if (!matchIndex) {
+        matchIndex = 1;
+    }
     let find = new RegExp(regexp, 'i');
     let match = find.exec(text);
     let val;
     if (match) {
         // console.log(match);
-        val = match[1];
+        val = match[matchIndex];
     }
     console.log(val);
     return val;
@@ -235,7 +238,7 @@ function displayMvs(list, method) {
             mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].text}</span></li>`;
         } else {
             /* With story */
-            mvRows += `<li class='MV glitch' value="${list[i].cnt}" id="${list[i].cnt}"><span class="baffle-forever">##</span> <span class="mvContent">${list[i].text}</span> <span class="baffle-forever">##</span></li>`
+            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="baffle-forever">##</span> <span class="mvContent">${list[i].text}</span> <span class="baffle-forever">##</span></li>`
         }
 
     }

@@ -123,6 +123,27 @@ app.post('/api/mvs', function(req, res, next) {
         });
 });
 
+app.delete('/api/mvs/:id', function(req, res, next) {
+    let id = req.params.id;
+    console.log("deleteing", id);
+    db.none(`delete from MinnsDu 
+            where id = (
+                select id from 
+                (select id from MinnsDu order by MVOrder limit 1 OFFSET  $1) as t
+            )`, [id-1])
+        .then(function(data) {
+            res.status(200)
+                .send({
+                    status: 'success',
+                    message: 'Deleted '+id
+                });
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
+});
+
 module.exports = app;
 
 
