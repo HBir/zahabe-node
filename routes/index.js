@@ -71,7 +71,6 @@ app.get('/api/search', function(req, res, next) {
             FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
 			WHERE text LIKE $1
             ORDER BY MVOrder desc
-
             `, ["%" + req.query.input + "%"])
         .then(function(data) {
             res.send(data);

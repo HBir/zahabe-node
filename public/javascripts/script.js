@@ -58,14 +58,15 @@ function cliInput(input) {
         } else {
             pendingConfirm = undefined;
             $('.MV').show();
-            cliClear();
+            // cliClear();
+            cliOut('...avbröt att ta bort '+id+"?");
             $('#cli_output').hide();
         }
     } else if (cliMatch(input, "edit")) {
         /** edit */
-        cliOut('#Redigera MV\nedit [number] [new text]\n-Not yet implemented-');
+        cliOut('#Redigera MV\nedit [number] [new text]\n-Function not yet implemented-');
 
-    } else if (cliMatch(input, "delete") || cliMatch(input, "d")) {
+    } else if (cliMatch(input, "delete") || cliMatch(input, "d\\s")) {
         /** delete */
 
         let id = findSubstring("d(elete)?\\s*([0-9]*)", input, 2);
@@ -75,8 +76,7 @@ function cliInput(input) {
             $('.MV').hide();
             $('#' + id).show();
             cliClear();
-            cliOut('Säker på att du vill ta bort? (y/N)');
-            console.log(pendingConfirm);
+            cliOut('Säker på att du vill ta bort? (y/n)');
             pendingConfirm = function() {
                 ajaxLoading(true);
                 $.ajax({
@@ -88,19 +88,18 @@ function cliInput(input) {
                     refreshMvs();
                     ajaxLoading(false);
                 });
-                cliOut("keternek");
             }
         } else {
             cliOut('...inte hittade '+id+"?");
         }
         
-        // cliOut('#Ta bort MV\ndelete [number]\n-Not yet implemented-');
+        // cliOut('#Ta bort MV\ndelete [number]\n-Function not yet implemented-');
     } else if (cliMatch(input, "move")) {
         /** move */
-        cliOut('#Flytta MV\nmove [old number] [new number]\n-Not yet implemented-');
+        cliOut('#Flytta MV\nmove [old number] [new number]\n-Function not yet implemented-');
     } else if (cliMatch(input, "story")) {
         /** story */
-        cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Not yet implemented-');
+        cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Function not yet implemented-');
     } else if (cliMatch(input, "search")) {
         /** search */
 
@@ -119,7 +118,8 @@ function cliInput(input) {
         // cliOut('#Hitta alla MVs som innehåller term\nsearch [term]');
     } else if (cliMatch(input, "random")) {
         /** random */
-        cliOut('#Visa en slumpad MV\nrandom\n-Not yet implemented-');
+
+        cliOut('#Visa en slumpad MV\nrandom\n-Function not yet implemented-');
     } else if (cliMatch(input, "mine")) {
         /** mine */
 
@@ -136,7 +136,7 @@ function cliInput(input) {
         cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine');
     } else if (cliMatch(input, "stats")) {
         /** stats */
-        cliOut('#Visa statistik\nstats\n-Not yet implemented-');
+        cliOut('#Visa statistik\nstats\n-Function not yet implemented-');
     } else if (cliMatch(input, "test")) {
         /** tests something */
         refreshMvs();
@@ -165,7 +165,7 @@ stats  #Visa statistik`;
 
     } else if (input.length > 0) {
         /* Error input */
-        cliOut(`...inte förstod.`);
+        cliOut(`...inte förstod?`);
     } else {
         /* If empty input */
         $('#cli_output').hide();
@@ -281,7 +281,7 @@ $(window).load(function() {
         if (!pauseRefresh) {
             refreshMvs();
         }
-    }, 5000);
+    }, 20000);
 });
 
 $(window).focus(function() {
