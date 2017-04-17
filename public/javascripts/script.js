@@ -5,6 +5,8 @@ let newList = 0;
 let timer = null;
 let pauseRefresh = false;
 
+let pendingConfirm;
+
 console.log("script loaded");
 $(document).ready(function() {
     $('#cli_input').focus();
@@ -48,30 +50,50 @@ function cliInput(input) {
                 refreshMvs('add');
                 console.log("input Saved: " + msg);
             });
+    } else if (pendingConfirm) {
+        /** edit */
+        if (input[0] == "y" || input[0] == "Y") {
+            pendingConfirm();
+            pendingConfirm = undefined;
+        } else {
+            pendingConfirm = undefined;
+            $('.MV').show();
+            cliClear();
+            $('#cli_output').hide();
+        }
     } else if (cliMatch(input, "edit")) {
         /** edit */
         cliOut('#Redigera MV\nedit [number] [new text]\n-Not yet implemented-');
-    } else if (cliMatch(input, "delete")) {
+
+    } else if (cliMatch(input, "delete") || cliMatch(input, "d")) {
         /** delete */
 
-        let id = findSubstring("delete+\\s([0-9]*)", input)
+        let id = findSubstring("d+\\s*([0-9]*)", input)
 
-        $('#dagens').hide();
-        $('.MV').hide();
-        $('#' + id).show();
-        cliClear();
-        cliOut('Säker på att du vill ta bort? (y/n)')
-
-        $.ajax({
-                method: "DELETE",
-                url: "/api/mvs",
-                data: { input: input }
-            })
-            .done(function(res) {
-                console.log(res);
-                refreshMvs();
-                ajaxLoading(false);
-            });
+        if ($('#' + id).length > 0) {
+            $('#dagens').hide();
+            $('.MV').hide();
+            $('#' + id).show();
+            cliClear();
+            cliOut('Säker på att du vill ta bort? (y/N)');
+            console.log(pendingConfirm);
+            pendingConfirm = function() {
+                ajaxLoading(true);
+                $.ajax({
+                    method: "DELETE",
+                    url: "/mvs/"+id
+                })
+                .done(function(res) {
+                    displayMvs(res);
+                    refreshMvs();
+                    ajaxLoading(false);
+                });
+                cliOut("keternek");
+            }
+        } else {
+            cliOut('...inte hittade '+id+"?");
+        }
+        
         // cliOut('#Ta bort MV\ndelete [number]\n-Not yet implemented-');
     } else if (cliMatch(input, "move")) {
         /** move */
@@ -278,7 +300,7 @@ function refreshMvs(type) {
         ajaxLoading(false);
         var newList = data.length;
         localStorage.setItem("MVAmount", newList);
-        if (newList != oldList) {
+        if (newList != oldList || type == "force") {
             console.log(data);
             let diff = newList - oldList;
 
