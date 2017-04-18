@@ -58,9 +58,9 @@ function cliInput(input) {
         } else {
             pendingConfirm = undefined;
             $('.MV').show();
-            // cliClear();
+            cliClear();
             cliOut('...avbröt att ta bort '+id+"?");
-            $('#cli_output').hide();
+            // $('#cli_output').hide();
         }
     } else if (cliMatch(input, "edit")) {
         /** edit */
@@ -87,6 +87,9 @@ function cliInput(input) {
                     displayMvs(res);
                     refreshMvs();
                     ajaxLoading(false);
+                    cliClear();
+                    cliOut("...tog bort "+id+"?");
+
                 });
             }
         } else {
