@@ -6,6 +6,7 @@ let timer = null;
 let pauseRefresh = false;
 
 let pendingConfirm;
+let pendingFunction;
 
 console.log("script loaded");
 $(document).ready(function() {
@@ -27,9 +28,45 @@ $(document).on("keypress", "#cli_input", function(e) {
     }
 });
 
+function dec2hex (dec) {
+  return ('0' + dec.toString(16)).substr(-2)
+}
+
+function generateId (len) {
+  var arr = new Uint8Array((len || 40) / 2)
+  window.crypto.getRandomValues(arr)
+  return Array.from(arr, dec2hex).join('')
+}
+
+
+function getUserString() {
+    let userString = localStorage.getItem('userString');
+    if (!userString) {
+        userString = generateId(20);
+        localStorage.setItem('userString',userString);
+    }
+    return userString;
+}
+
+
+
 function cliInput(input) {
-    console.log("'" + input.substring(0, 27) + "'");
-    if ((cliMatch(input, "Minns vi den gången Zahabe ") || cliMatch(input, "mvdgz ")) && input.indexOf('?') > 0) {
+    if (pendingConfirm) {
+        if (input[0] == "y" || input[0] == "Y") {
+            pendingConfirm();
+            pendingConfirm = undefined;
+        } else {
+            pendingConfirm = undefined;
+            $('.MV').show();
+            cliClear();
+            cliOut('...avbröt sin död?');
+        }
+
+    } else if (pendingFunction) {
+        pendingFunction(input);
+        // pendingFunction = undefined;
+    }
+    else if ((cliMatch(input, "Minns vi den gången Zahabe ") || cliMatch(input, "mvdgz ")) && input.indexOf('?') > 0) {
         /** mvdgz - Add new MV */
         input = input.substring(0, input.lastIndexOf('?') + 1);
         if (input.substring(0, 6) == "mvdgz ") {
@@ -39,7 +76,10 @@ function cliInput(input) {
         $.ajax({
                 method: "POST",
                 url: "/api/mvs",
-                data: { mv: input }
+                data: { 
+                    mv: input,
+                    user: getUserString()
+                }
             })
             .done(function(msg) {
                 cliClear();
@@ -50,21 +90,62 @@ function cliInput(input) {
                 refreshMvs('add');
                 console.log("input Saved: " + msg);
             });
-    } else if (pendingConfirm) {
-        /** edit */
-        if (input[0] == "y" || input[0] == "Y") {
-            pendingConfirm();
-            pendingConfirm = undefined;
-        } else {
-            pendingConfirm = undefined;
-            $('.MV').show();
-            cliClear();
-            cliOut('...avbröt att ta bort '+id+"?");
-            // $('#cli_output').hide();
-        }
+
+
+
+
     } else if (cliMatch(input, "edit")) {
         /** edit */
-        cliOut('#Redigera MV\nedit [number] [new text]\n-Function not yet implemented-');
+        let id = findSubstring("e(dit)?\\s*([0-9]*)", input, 2);
+        let password = findSubstring("e(dit)?\\s*[0-9]*\\s*(.*)", input, 2);
+        ajaxLoading(true);
+        $.ajax({
+            method: "GET",
+            url: "/api/my-mvs/"+getUserString()+"?id="+id+"&password="+password
+        })
+        .done(function(res) {
+            ajaxLoading(false);
+            if (res.status === "fail") {
+                cliOut(res.message);
+                return;
+            }
+            console.log(res);
+            $('#cli_input').val(res[0].text);
+            cliOut("...redigerar "+id+"?");
+            pendingFunction = function(editedInput) {
+                // cliOut(editedInput);
+                if (!findSubstring('Minns vi den gången Zahabe (.*)\\?', editedInput, 1)) {
+                    cliOut('...inte förstod?');
+                    return;
+                }
+                ajaxLoading(true);
+                $.ajax({
+                    method: "PUT",
+                    url: "/api/mvs/"+getUserString()+"?id="+id,
+                    data: {text: editedInput, password: password}
+                })
+                .done(function(res) {
+                    // $('#cli_input').val(res[0].text);
+
+                    
+                    cliOut("...redigerade "+id+"?");
+                    
+                    pendingFunction = undefined;
+                    console.log("vi är klara och har refreshat?");
+                    ajaxLoading(false);
+                    cliClear();
+                    refreshMvs("force");
+                    
+                }).
+                catch(function(err) {
+                    cliOut(err);
+                    pendingFunction = undefined;
+                    console.log(err);
+                });
+            }
+        });
+
+
 
     } else if (cliMatch(input, "delete") || cliMatch(input, "d\\s")) {
         /** delete */
@@ -81,14 +162,21 @@ function cliInput(input) {
                 ajaxLoading(true);
                 $.ajax({
                     method: "DELETE",
-                    url: "/api/mvs/"+id
+                    url: "/api/mvs/"+id,
+                    data: {user: getUserString()}
                 })
                 .done(function(res) {
                     displayMvs(res);
-                    refreshMvs();
+                    
                     ajaxLoading(false);
                     cliClear();
-                    cliOut("...tog bort "+id+"?");
+                    if (res.status == "failed") {
+                        cliOut("...inte kunde ta bort "+id+" för han inte var den som skrev den?");
+                    } else {
+                        cliOut("...tog bort "+id+"?");
+                    }
+                    
+                    refreshMvs('force');
 
                 });
             }
@@ -97,12 +185,21 @@ function cliInput(input) {
         }
         
         // cliOut('#Ta bort MV\ndelete [number]\n-Function not yet implemented-');
+
+
+
     } else if (cliMatch(input, "move")) {
         /** move */
         cliOut('#Flytta MV\nmove [old number] [new number]\n-Function not yet implemented-');
+
+
+
     } else if (cliMatch(input, "story")) {
         /** story */
         cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Function not yet implemented-');
+
+
+
     } else if (cliMatch(input, "search")) {
         /** search */
 
@@ -115,14 +212,21 @@ function cliInput(input) {
                 data: { input: term }
             })
             .done(function(res) {
+                $('#dagens').hide();
                 displayMvs(res);
                 ajaxLoading(false);
             });
         // cliOut('#Hitta alla MVs som innehåller term\nsearch [term]');
+
+
+
     } else if (cliMatch(input, "random")) {
         /** random */
 
         cliOut('#Visa en slumpad MV\nrandom\n-Function not yet implemented-');
+
+
+
     } else if (cliMatch(input, "mine")) {
         /** mine */
 
@@ -130,21 +234,31 @@ function cliInput(input) {
         pauseRefresh = true;
         $.ajax({
                 method: "GET",
-                url: "/api/my-mvs"
+                url: "/api/my-mvs/"+getUserString()
             })
             .done(function(res) {
+                $('#dagens').hide();
                 displayMvs(res);
                 ajaxLoading(false);
             });
-        cliOut('#Hitta alla MVs skrivna vid samma IP address som din nuvarande IP\nmine');
+        cliOut('#Hitta alla MVs skrivna på denna datorn\nmine');
+
+
+
     } else if (cliMatch(input, "stats")) {
         /** stats */
         cliOut('#Visa statistik\nstats\n-Function not yet implemented-');
+
+
+
     } else if (cliMatch(input, "test")) {
         /** tests something */
         refreshMvs();
         // $('#MVs').html("");
         cliOut('Testing');
+
+
+
     } else if (cliMatch(input, "h") || cliMatch(input, "help") || cliMatch(input, "man")) {
         /** help - Log out help commands */
         cliClear();
@@ -165,6 +279,8 @@ stats  #Visa statistik`;
         }
 
         cliOut(output);
+
+
 
     } else if (input.length > 0) {
         /* Error input */
@@ -203,6 +319,10 @@ function cliOut(text, callback) {
     })();
 
 }
+function checkPending() {
+    console.log(pendingFunction);
+}
+
 
 function findSubstring(regexp, text, matchIndex) {
     if (!matchIndex) {

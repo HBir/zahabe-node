@@ -48,13 +48,37 @@ app.get('/api/mvs', function(req, res, next) {
 });
 
 
-app.get('/api/my-mvs', function(req, res, next) {
-    db.any(`
+app.get('/api/my-mvs/:user', function(req, res, next) {
+    if (req.query.id) {
+        db.any(`
             SELECT Text, ID, Story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
             FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
-			WHERE skrivenav = $1
+            WHERE id = (
+                select id from 
+                (select id from MinnsDu order by MVOrder limit 1 OFFSET  $1) as t
+            )
             ORDER BY MVOrder desc
-            `, [req.connection.remoteAddres || req.ip])
+            `, [req.query.id -1])
+        .then(function(data) {
+            console.log(data);
+            if (data.skrivenav === req.params.user || req.query.password === "iklabbe") {
+                res.send(data);
+            } else {
+                res.send({status: "fail", message: "This MV is not written by you"});
+            }
+            
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
+    } else {
+        db.any(`
+            SELECT Text, ID, Story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
+            WHERE skrivenav = $1
+            ORDER BY MVOrder desc
+            `, [req.params.user])
         .then(function(data) {
             res.send(data);
         })
@@ -62,7 +86,10 @@ app.get('/api/my-mvs', function(req, res, next) {
             console.log(err);
             return next(err);
         });
+    }
+    
 });
+
 
 app.get('/api/search', function(req, res, next) {
     console.log(req.query);
@@ -100,9 +127,10 @@ app.post('/api/mvs', function(req, res, next) {
     console.log(req.connection.remoteAddres);
     console.log(req.ip);
 
+
     db.one(`INSERT INTO MinnsDu (Text, SkrivenAv)
                 VALUES ($1, $2)
-                RETURNING id`, [req.body.mv, req.connection.remoteAddres || req.ip])
+                RETURNING id`, [req.body.mv, req.body.user])
         .then(function(data) {
             console.log(data.id);
             db.none(`UPDATE MinnsDu
@@ -125,22 +153,66 @@ app.post('/api/mvs', function(req, res, next) {
 app.delete('/api/mvs/:id', function(req, res, next) {
     let id = req.params.id;
     console.log("deleteing", id);
-    db.none(`delete from MinnsDu 
+    db.result(`delete from MinnsDu 
             where id = (
                 select id from 
                 (select id from MinnsDu order by MVOrder limit 1 OFFSET  $1) as t
-            )`, [id-1])
-        .then(function(data) {
-            res.status(200)
+            ) AND skrivenav = $2`, [id-1, req.body.user])
+        .then(function(result) {
+            console.log(result.rowCount);
+            if (result.rowCount > 0) {
+                res.status(200)
                 .send({
                     status: 'success',
                     message: 'Deleted '+id
                 });
+            } else {
+                res.status(200)
+                .send({
+                    status: 'failed',
+                    message: 'Failed in deleting '+id
+                });
+            }
+            
         })
         .catch(function(err) {
             console.log(err);
             return next(err);
         });
+});
+
+app.put('/api/mvs/:user', function(req, res, next) {
+    console.log("woo");
+    let querystring;
+    if (req.body.password === "iklabbe") {
+        querystring = 
+            `UPDATE minnsdu SET text = $1 where id = (
+                select id from 
+                (select id from MinnsDu order by MVOrder limit 1 OFFSET  $2) as t
+            )`;
+    } else {
+        querystring = 
+            `UPDATE minnsdu SET text = $1 where id = (
+                select id from 
+                (select id from MinnsDu order by MVOrder limit 1 OFFSET  $2) as t
+            ) AND skrivenav = $3`;
+    }
+
+    db.result(querystring, [req.body.text, req.query.id -1, req.params.user] )
+            .then(function(result) {
+                console.log(result);
+                res.status(200)
+                    .send({
+                        status:'success'
+                    });
+            })
+            .catch(function(err) {
+                console.log(err);
+                res.status(500)
+                .send({
+                    status:'fail'
+                });
+            });
 });
 
 module.exports = app;
