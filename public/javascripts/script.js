@@ -196,7 +196,13 @@ function cliInput(input) {
 
     } else if (cliMatch(input, "story")) {
         /** story */
-        cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Function not yet implemented-');
+        
+        if (cliMatch(input, "story show")) {
+            refreshMvs('story');
+            pauseRefresh = true;
+        } else {
+            cliOut('story new  #Skapa en ny story\nstory edit [number]  #Redigera story\nstory show  #Visa alla MVs med story\n-Function not yet implemented-');
+        }
 
 
 
@@ -423,7 +429,11 @@ function refreshMvs(type) {
     console.log("auto refreshing");
     /*Kollar om några nya inlägg har lagts till och uppdaterar sidan asynkront ifall så är fallet*/
     ajaxLoading(true);
-    $.get("/api/mvs", function(data) {
+    let params = "";
+    if (type == "story") {
+        params= "/story";
+    }
+    $.get("/api/mvs"+params, function(data) {
         ajaxLoading(false);
         var newList = data.length;
         localStorage.setItem("MVAmount", newList);

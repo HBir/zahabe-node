@@ -47,6 +47,21 @@ app.get('/api/mvs', function(req, res, next) {
     })
 });
 
+app.get('/api/mvs/story', function(req, res, next) {
+    db.any(`
+        SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+        FROM MinnsDu a INNER JOIN Stories ON a.ID = Stories.MVID
+        ORDER BY MVOrder desc
+    `)
+        .then(function(data) {
+            res.send(data);
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
+});
+
 app.get('/api/mvs/:id', function(req, res, next) {
     db.one(`
         SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
@@ -55,7 +70,6 @@ app.get('/api/mvs/:id', function(req, res, next) {
         ORDER BY MVOrder desc
     `, [req.params.id])
         .then(function(data) {
-            console.log(data);
             res.send(data);
         })
         .catch(function(err) {
@@ -63,6 +77,8 @@ app.get('/api/mvs/:id', function(req, res, next) {
             return next(err);
         });
 });
+
+
 
 
 app.get('/api/my-mvs/:user', function(req, res, next) {
