@@ -60,8 +60,9 @@ app.get('/api/my-mvs/:user', function(req, res, next) {
             ORDER BY MVOrder desc
             `, [req.query.id -1])
         .then(function(data) {
-            console.log(data);
-            if (data.skrivenav === req.params.user || req.query.password === "iklabbe") {
+            console.log(data[0].skrivenav);
+            console.log(req.params.user);
+            if (data[0].skrivenav === req.params.user || req.query.password === "iklabbe") {
                 res.send(data);
             } else {
                 res.send({status: "fail", message: "This MV is not written by you"});

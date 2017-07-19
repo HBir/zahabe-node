@@ -128,7 +128,7 @@ function cliInput(input) {
                     // $('#cli_input').val(res[0].text);
 
                     
-                    cliOut("...redigerade "+id+"?");
+                    cliOut("...lyckades med att redigera "+id+"?");
                     
                     pendingFunction = undefined;
                     console.log("vi är klara och har refreshat?");
