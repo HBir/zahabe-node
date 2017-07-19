@@ -441,8 +441,11 @@ function refreshMvs(type) {
     $.get("/api/mvs"+params, function(data) {
         ajaxLoading(false);
         var newList = data.length;
-        localStorage.setItem("MVAmount", newList);
-        if (newList != oldList || type == "force") {
+        if (type !== 'story') {
+            localStorage.setItem("MVAmount", newList);
+        }
+        
+        if (newList != oldList || type == "force" || type == "story") {
             console.log(data);
             let diff = newList - oldList;
 
