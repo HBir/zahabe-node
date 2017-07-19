@@ -14,7 +14,7 @@ let db = dbObj.connection;
 app.get('/', function(req, res, next) {
 
     getAllMVs(function(mvs) {
-
+        console.log(mvs);
         var rng = new RNG(getDate());
         let daily = rng.nextRange(1, mvs.length)
         console.log(mvs[daily])
@@ -45,6 +45,23 @@ app.get('/api/mvs', function(req, res, next) {
     getAllMVs(function(mvs) {
         res.send(mvs);
     })
+});
+
+app.get('/api/mvs/:id', function(req, res, next) {
+    db.one(`
+        SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+        FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
+        WHERE id = $1
+        ORDER BY MVOrder desc
+    `, [req.params.id])
+        .then(function(data) {
+            console.log(data);
+            res.send(data);
+        })
+        .catch(function(err) {
+            console.log(err);
+            return next(err);
+        });
 });
 
 

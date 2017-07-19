@@ -1,5 +1,31 @@
 
 <div id="wrapper">
+  <div id="modal" style="display: none">
+    <a href="javascript:void();"><div id="remove_modal">X</div></a>
+    <div id="modal_inner">
+      <div id="story_header"><div id="story_ajax" class="baffle-forever" style="{{!--display: none--}}">Minns vi den gången Zahabe laddade långsamt?</div><div id="story_header_text">{{!--Minns vi den gången Zahabe fick Bergen op Zoom?--}}</div></div>
+      <div id="storytext">
+        {{!--<p>There was once Zahabe.
+      </p><p>    Once every decade, he would travel the distant reaches of this world for answers to questions as yet unposed. Indeed, such journeying inevitably brought him to the shores of the exotic Bergen op Zoom wherein flutists blew shrill tones and houses were made of kugelmaacht and all women worshipped wretched indecency.
+      </p><p>    Descending his trusty, shit-stained skiff which had taken him across the seas, Zahabe inhaled kugelmaacht-infested air and looked around in satisfaction. There, behind that corner - look, look! -, the first of many women approached him. An ugly specimen, to be sure, with a single eyebrow the shape of a gull, its wings extended. Her every word sang proof of her kugelmaacht-addled brains.
+      </p><p>    "What will je? Is he come to find?" She seemed impatient. "Tell me, what will je?"
+      </p><p>    To answer her question would defeat the very purpose of his journey, didn't she know? Come, he would say instead, take me to the one who knows.
+      </p><p>And take him she would. Down the cobbled streets they went, attracting more indecent women with every turn, moths drawn to a flame: women of modest proportions, women of robust frames, women of mediocre standing. "What will je?" they would ask. 
+      </p><p>"Gruuthuse!" the woman with the eyebrow would respond in his place, all soaked with pride. "He must see Gruuthuse!"
+      </p><p>    As questioneers turned into answereers, the crowd gained size and every question received a stronger and more vibrant response: "Gruuthuse!" Soon even the flutists joined the fray and added their pipes to what had become a kingdom of tones and melodies that stirred the very ground on which they marched. All around them cobbles shivered and houses trembled to the tunes, shaking off kugelmaacht like a forest of giant fungi shedding spores in unison. Clouds of red soon amassed and occluded even the sun, and a coughing Zahabe thought to himself, the epitome of indecency, these women!
+      </p><p>    The sun had peaked noon when something emerged from within the bright red haze. A woman with bouncing tits climbed a rock and screamed "GRUUTHUSE!", pointing two fingers at the structure that was gradually growing into a mansion. From what Zahabe could tell, this woman had replaced the one with the eyebrow, who had perished from suffocation a while back. Zahabe noticed this new command was also responsible for carving out the eyebrow from her predecessor's face, a ritual from which he inferred the succession of command. There were many other casualties beside the eyebrow. Apparently, the death toll had long ago motivated the city hall to pass a law prohibiting collective enthusiasm, as often enough it would result in local kugelmaacht-induced catastrophes. Exceptions were made for special visitors only; Zahabe rejoiced.
+      </p><p>    Zahabe and his retinue picked their way through tidy gardens strewn with blood-bright statues of kugelmaacht. These were all modelled after the same one entity, each statue featuring some distinct corporal property deformed to the point of absurdity. It wasn’t long before they sighted the archetype himself from whom this entire collection of grotesque self-loving had originally sprung. A giant of a man - seven feet tall! - with no face, Gruuthuse stood immovable as a mountain as he awaited the crazed mob on the porch. Zahabe thought to himself, he hides his intentions well.
+      </p><p>    "Stoep!" announced Gruuthuse. "Stoep by the stoep!"
+      </p><p>    A charged silence descended over the animated crowd. The woman with the bouncing tits shoved Zahabe forward. He fell under Gruuthuse’s eyeless scrutiny. "Be welcome to Bergen op Zoom. What will je?"
+      </p><p>    Zahabe thought of lost loves, of days and years gone by. He straightened his back, readying himself for his fate. “Tell me.”
+      </p><p>    "Je will have this town."
+      </p><p>    Zahabe was baffled.
+      </p><p>    "Do not look so baffled. You have yearned for every town in which you have ever set foot. And on this day, I shall release you from the shackles of yearning.” Gruuthuse raised his hands to the sky as if to call down divinity. “From this day forth, let all of mankind know our town by the name of Zahabe op Zoom."
+      </p><p>The crowd burst into a wild cheer. Women of robust frames embraced disproportionate women. Flutists inhaled kugelmaacht and blew a trudeloo. She with the bouncing tits ran up and slapped the eyebrow – skin and blood and all – onto his forehead, thereby marking him for leader. This suited Zahabe perfectly; he turned to his subjects and announced, je will have all.
+      </p>--}}
+      </div>
+    </div>
+  </div>
   <h1 id="title"><a href="/" class="baffle">Minns vi den gången Zahabe...</a></h1>
   <h1 id="ajax_loader"><a href="/" class="baffle-forever">Minns vi den gången Zahabe...</a></h1>
 
@@ -27,10 +53,10 @@
   <div id="rows">
     <ol id="MVs">
       {{#each MVs}}
-        {{#if this.Story}}
-          <a href='#'><li value="{{this.cnt}}" class='MV glitch'><span class="mvContent"><span class="baffle-forever">##</span> {{this.text}} <span class="baffle-forever">##</span></span></li></a>
+        {{#if this.story}}
+          <a href='/story/{{this.id}}'><li value="{{this.cnt}}" class='MV story' id="{{this.id}}"><span class="mvContent"><span class="baffle-forever">##</span> {{this.text}} <span class="baffle-forever">##</span></span></li></a>
         {{else}}
-          <li class='MV' value="{{this.cnt}}" id="{{this.cnt}}"><span class="mvContent">{{this.text}}</span></li>
+          <li class='MV' value="{{this.cnt}}" id="{{this.id}}"><span class="mvContent">{{this.text}}</span></li>
         {{/if}}
       {{/each}}
        

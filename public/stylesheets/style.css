@@ -253,14 +253,7 @@ a {
     right: 10px;
 }
 
-#storytext {
-    text-align: justify;
-    margin: 40px;
-}
 
-#storytext::first-letter {
-    font: 70px "cloister_blacklight", "Open Sans";
-}
 
 a li span:hover {
     color: gray;
@@ -307,8 +300,52 @@ a li span:hover {
     font-size: 20px;
 }
 
+#storytext {
+    text-align: justify;
+    margin: 20px;
+}
+
+#storytext::first-letter {
+    font: 50px "cloister_blacklight", "FantasqueSansMono";
+}
+
+#modal {
+    width: 90%;
+    height: 90%;
+    background-color: #020202;
+    position: fixed;
+    top:0;
+    margin: 5vh 5% 5vh 5%;
+    z-index: 100;
+    
+}
+
+#modal_inner {
+    overflow-y: auto;
+    height:100%;
+    width: 100%;
+}
+
+
 #storytext p {
     text-indent: 30px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+#story_header {
+    text-align: center;
+    font-size: 1.5em;
+    margin-top:5px;
+}
+
+#remove_modal {
+    position: absolute;
+    top: -35px;
+    right: 15px;
+    background-color:#020202;
+    font-size: 30px;
+    padding: 5px 13px 0 13px;
 }
 
 #storyedit {
@@ -473,3 +510,4 @@ hr {
     font: 20px "Open Sans", "sans-serif";
     float: left;
 }
+

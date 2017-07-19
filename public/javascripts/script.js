@@ -355,6 +355,7 @@ function findSubstring(regexp, text, matchIndex) {
 
 function displayMvs(list, method) {
     let mvRows = ``;
+    console.log(list);
     for (var i = 0; i < list.length; i++) {
         if (list[i].story === null) {
             /* No story */
@@ -450,6 +451,35 @@ function refreshMvs(type) {
         }
     });
 }
+$(function() {
+    $(document).on('click', '.story', function(e) {
+        e.preventDefault();
+
+        let id = $(this).attr('id');
+        console.log(id);
+        let pageUrl = '/story/'+id
+
+        // window.history.pushState('', '', pageUrl);
+        $('#story_ajax').show();
+        $('#modal').show();
+
+        $.get( "/api/mvs/"+id )
+            .done(function( data ) {
+                $('#story_ajax').hide();
+                console.log(data.text);
+                console.log(data.story);
+                $('#story_header #story_header_text').text(data.text);
+                $('#storytext').text(data.story);
+                console.log(data);
+            });
+    });
+
+    $(document).on('click', '#remove_modal', function(e) {
+
+
+        $('#modal').hide();
+    });
+});
 
 // function isBlank(str) {
 //     return (!str || /^\s*$/.test(str));
