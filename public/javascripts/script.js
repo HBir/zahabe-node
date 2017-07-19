@@ -460,7 +460,11 @@ $(function() {
         let pageUrl = '/story/'+id
 
         // window.history.pushState('', '', pageUrl);
+        $('#storytext').html("");
+        $('#story_header_text').html("");
+        
         $('#story_ajax').show();
+        
         $('#modal').show();
 
         $.get( "/api/mvs/"+id )
@@ -468,8 +472,11 @@ $(function() {
                 $('#story_ajax').hide();
                 console.log(data.text);
                 console.log(data.story);
+
+                let story = data.story.split('\n');
+                story = '<p>'+story.join('</p><p>')+'</p>';
                 $('#story_header #story_header_text').text(data.text);
-                $('#storytext').text(data.story);
+                $('#storytext').html(story);
                 console.log(data);
             });
     });
