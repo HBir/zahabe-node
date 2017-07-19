@@ -49,7 +49,7 @@ app.get('/api/mvs', function(req, res, next) {
 
 app.get('/api/mvs/story', function(req, res, next) {
     db.any(`
-        SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+        SELECT Text, ID, MVID as story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
         FROM MinnsDu a INNER JOIN Stories ON a.ID = Stories.MVID
         ORDER BY MVOrder desc
     `)
@@ -64,7 +64,7 @@ app.get('/api/mvs/story', function(req, res, next) {
 
 app.get('/api/mvs/:id', function(req, res, next) {
     db.one(`
-        SELECT Text, ID, Story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+        SELECT Text, ID, story, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
         FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
         WHERE id = $1
         ORDER BY MVOrder desc
@@ -84,7 +84,7 @@ app.get('/api/mvs/:id', function(req, res, next) {
 app.get('/api/my-mvs/:user', function(req, res, next) {
     if (req.query.id) {
         db.any(`
-            SELECT Text, ID, Story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            SELECT Text, ID, MVID as story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
             FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
             WHERE id = (
                 select id from 
@@ -108,7 +108,7 @@ app.get('/api/my-mvs/:user', function(req, res, next) {
         });
     } else {
         db.any(`
-            SELECT Text, ID, Story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            SELECT Text, ID, MVID as story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
             FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
             WHERE skrivenav = $1
             ORDER BY MVOrder desc
@@ -128,7 +128,7 @@ app.get('/api/my-mvs/:user', function(req, res, next) {
 app.get('/api/search', function(req, res, next) {
     console.log(req.query);
     db.any(`
-            SELECT Text, ID, Story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
+            SELECT Text, ID, mvid as story, skrivenAv, (select count(*) from MinnsDu b  where a.id >= b.id) as cnt
             FROM MinnsDu a LEFT JOIN Stories ON a.ID = Stories.MVID
 			WHERE text LIKE $1
             ORDER BY MVOrder desc
