@@ -365,10 +365,15 @@ function displayMvs(list, method) {
     for (var i = 0; i < list.length; i++) {
         if (list[i].story === null) {
             /* No story */
-            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="mvContent">${list[i].text}</span></li>`;
+            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].id}"><span class="mvContent">${list[i].text}</span></li>`;
         } else {
             /* With story */
-            mvRows += `<li class='MV' value="${list[i].cnt}" id="${list[i].cnt}"><span class="baffle-forever">##</span> <span class="mvContent">${list[i].text}</span> <span class="baffle-forever">##</span></li>`
+            mvRows += `
+            <a href='/story/${list[i].id}'>
+            <li value="${list[i].cnt}" class='MV story' id="${list[i].id}">
+            <span class="mvContent"><span class="baffle-forever">##</span> ${list[i].text} <span class="baffle-forever">##</span></span>
+            </li>
+            </a>`;
         }
 
     }
